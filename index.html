@@ -146,10 +146,7 @@ h1 {
 .layout { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 22px; align-items: start; }
 .content { min-width: 0; }
 
-/* ===== MASCOTA (contenedor de imagen, visible en toda la página) =====
-   Poné tu imagen en img/mascota.png. Si querés una imagen distinta
-   para cada momento, cambiá las URLs de las clases .m-login, .m-home,
-   .m-q, .m-ex y .m-fin más abajo. */
+/* ===== MASCOTA (contenedor de imagen, visible en toda la página) ===== */
 .mascota-col {
   position: sticky;
   top: calc(16px + env(safe-area-inset-top, 0px));
@@ -170,11 +167,11 @@ h1 {
   box-shadow: var(--shadow);
   overflow: hidden;
 }
-.m-login { background-image: url('img/mascota.png'); }
-.m-home  { background-image: url('img/mascota.png'); }
-.m-q     { background-image: url('img/mascota.png'); }
-.m-ex    { background-image: url('img/mascota.png'); }
-.m-fin   { background-image: url('img/mascota.png'); }
+.m-login { background-image: url('img/mascota_test.png'); }
+.m-home  { background-image: url('img/gato_programacion.png'); }
+.m-q     { background-image: url('img/mascota_test.png'); }
+.m-ex    { background-image: url('img/gato_programacion.png'); }
+.m-fin   { background-image: url('img/mascota_test.png'); }
 
 .mascota .ph {
   position: absolute; inset: 0;
@@ -251,6 +248,7 @@ h1 {
 }
 .prog .mk.hecho { background: var(--accent); }
 .count { font-size: .85rem; font-weight: 700; color: var(--muted); margin-bottom: 8px; }
+.tema { display: inline-block; font-size: .78rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--accent); background: var(--accent-soft); border-radius: 999px; padding: 3px 11px; margin: 0 0 8px; }
 .q { font-family: var(--font-titulo); font-size: 1.4rem; font-weight: 600; margin: 0 0 18px; line-height: 1.25; }
 
 .opt {
@@ -300,6 +298,7 @@ h1 {
 .btn.ghost:not(:disabled):hover { border-color: var(--accent); }
 .big { font-size: 1.08rem; padding: 15px 28px; width: 100%; }
 .acts { display: flex; gap: 10px; flex-wrap: wrap; }
+.navrow { margin-top: 6px; }
 :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 
 .home p { margin: 0 0 14px; }
@@ -404,6 +403,7 @@ h1 {
 .res ul.ejlist { list-style: none; padding: 0; display: grid; gap: 6px; }
 .ejlist li { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; padding: 9px 11px; border: 1px solid var(--line); border-radius: 12px; margin: 0; }
 .ejlist small { color: var(--muted); }
+.aviso { margin: 16px 0 0; padding: 12px 14px; border: 1.5px dashed var(--line); border-radius: 14px; background: var(--accent-soft); font-size: .92rem; }
 .contacto { margin-top: 22px; padding-top: 14px; border-top: 1.5px dashed var(--line); text-align: center; }
 .contacto h3 { margin: 0 0 4px; }
 .contacto h4, .contacto h5 { margin: 4px 0; font-weight: 700; }
@@ -482,7 +482,8 @@ h1 {
 const CONFIG = {
   PESO_TEST: 0.7,        // cuánto pesan las preguntas en el resultado
   PESO_PRACTICA: 0.3,    // cuánto pesan los mini desafíos
-  DESAFIO_CADA: 5        // aparece un mini desafío cada tantas preguntas
+  DESAFIO_CADA: 5,       // aparece un mini desafío cada tantas preguntas
+  AVISO_NEUTRO: 12       // si elegís tantas opciones "D" o más, aparece un aviso de perfil no técnico
 };
 
 const SP = {
@@ -521,159 +522,203 @@ const SP = {
   }
 };
 
+/* ===== PUNTAJE POR OPCIÓN =====
+   A = Sistemas / lógica / software
+   B = Mecánica / fuerza / gran escala
+   C = Precisión / circuitos / hardware chiquito
+   D = Neutro / habilidades blandas (+5 a las tres y sirve de control de perfil)
+   p = programación · e = electrónica · a = automotor */
+const PTS = {
+  A: { p: 18, e: 7,  a: 0  },
+  B: { p: 0,  e: 5,  a: 18 },
+  C: { p: 7,  e: 18, a: 7  },
+  D: { p: 5,  e: 5,  a: 5  }
+};
+const PTS_MAX = 18; // máximo de puntos que una sola pregunta puede dar a una especialidad
+
 /* ===== 30 PREGUNTAS =====
-   p = programación · e = electrónica · a = automotor
+   [tema, pregunta, { A, B, C, D }]
    (el orden de las opciones se mezcla solo al mostrarlas) */
 const Q = [
-  ["Se te rompe algo en tu casa y nadie sabe arreglarlo. ¿Qué hacés?", {
-    p: "Busco información y pienso el problema paso a paso antes de tocar nada.",
-    e: "Fijo si le llega corriente o si hay algún cable flojo.",
-    a: "Lo abro y busco qué pieza está gastada o rota."
+  ["Trabajo en equipo", "Cuando hacés un trabajo en grupo para la escuela o facultad, ¿cuál es tu fuerte?", {
+    A: "Organizar cómo se va a hacer la entrega, pensar las reglas y unir las partes que hicieron los demás.",
+    B: "Armar la maqueta, pegar las piezas o encargarme del material que se toca y se ve.",
+    C: "Armar los detalles con paciencia, fijarme que los cables/luces o cosas chicas no fallen.",
+    D: "Hablar en público, armar la lámina/presentación y coordinar a los compañeros."
   }],
-  ["Es sábado y no tenés nada que hacer. ¿Qué plan te copa más?", {
-    p: "Armar mi propio juego o una página web.",
-    e: "Armar algo con luces, pilas y cables.",
-    a: "Arreglar una bici o una moto."
+  ["Resolución de problemas", "Se rompe o falla algo en tu casa (un ventilador, la PC, un enchufe), ¿qué hacés?", {
+    A: "Busco en internet cómo funciona el sistema o el paso a paso del error para arreglarlo.",
+    B: "Agarro herramientas (destornillador, pinzas) y lo desarmo todo a ver qué parte se partió.",
+    C: "Me fijo con cuidado si hay un cable suelto, un foquito quemado o una piecita rota por dentro.",
+    D: "Intento tocar un par de botones o le pido a alguien que sepa que lo mire."
   }],
-  ["¿Qué video mirarías hasta el final?", {
-    p: "Cómo se crean los videojuegos por dentro.",
-    e: "Cómo funcionan los robots y los drones.",
-    a: "Cómo se restaura un auto viejo."
+  ["Pasatiempos de concentración", "¿Qué tipo de juego o pasatiempo te entretiene más tiempo sin aburrirte?", {
+    A: "Juegos de estrategia, acertijos lógicos o videojuegos donde hay que resolver puzles.",
+    B: "Juegos de carreras, arreglar tu bici/moto o armar cosas con las manos a gran escala.",
+    C: "Armar Legos complejos, rompecabezas de muchas piezas o maquetas minuciosas.",
+    D: "Juegos de mesa sociales, dibujar o crear historias."
   }],
-  ["En un trabajo grupal, ¿qué parte te sale mejor?", {
-    p: "Ordenar las ideas para que todo tenga sentido.",
-    e: "Hacer que todas las partes funcionen conectadas entre sí.",
-    a: "Armar y construir lo que se ve, como la maqueta."
+  ["Manejo de la frustración", "Estás tratando de hacer andar algo y no sale. ¿Qué situación te molesta MENOS?", {
+    A: "Probar una y otra vez combinaciones de pasos en la computadora hasta que salga.",
+    B: "Ensuciarme las manos, hacer fuerza y probar piezas físicas hasta que encajen.",
+    C: "Con mucha paciencia, probar partes chiquitas una por una para ver dónde está la falla.",
+    D: "Dejarlo descansar un rato y volver más tarde con la cabeza fresca."
   }],
-  ["Te regalan plata para gastar en lo que quieras. ¿Qué elegís?", {
-    p: "Una buena compu para jugar y crear cosas.",
-    e: "Un kit para armar un robot con luces y sensores.",
-    a: "Un set de herramientas completo."
+  ["Curiosidad por los objetos", "Si ves un aparato moderno que te llama la atención, ¿qué es lo primero que te preguntás?", {
+    A: "¿Cómo hicieron la pantalla/menú y qué instrucciones le dieron para que responda así?",
+    B: "¿Qué tan rápido va, cuánta potencia tiene y de qué material está hecho el motor/estructura?",
+    C: "¿Cómo entran tantas lucecitas y chips adentro de un espacio tan diminuto?",
+    D: "¿Quién lo diseñó, cuánto cuesta y para qué sirve en la vida diaria?"
   }],
-  ["¿Qué clase se te pasa más rápido?", {
-    p: "Matemática, cuando hay que resolver acertijos.",
-    e: "Física, cuando vemos electricidad e imanes.",
-    a: "Taller, cuando se usan herramientas y máquinas."
+  ["Tu espacio de trabajo ideal", "¿Cómo te imaginás trabajando cómodo en el futuro?", {
+    A: "Sentado frente a una o dos pantallas, en un escritorio cómodo, quizás desde mi casa.",
+    B: "En un taller grande, moviéndome, rodeado de herramientas, máquinas y ruido.",
+    C: "En una mesa ordenada con lupas, soldadores chiquitos, luces y tableros de prueba.",
+    D: "En una oficina abierta compartiendo ideas y hablando con mucha gente."
   }],
-  ["De golpe, un aparato deja de funcionar. ¿Qué pensás primero?", {
-    p: "Se habrá colgado o tiene un error. ¿Lo reinicio?",
-    e: "Se habrá cortado la luz o se quemó algo adentro.",
-    a: "Se habrá trabado o recalentado alguna pieza."
+  ["Uso de la tecnología", "¿Qué es lo que más te atrae de los celulares y computadoras?", {
+    A: "Descargar apps, probar funciones secretas o ver cómo funcionan los programas por dentro.",
+    B: "La potencia del hardware, la carcasa, qué tan resistente es y los repuestos.",
+    C: "Los circuitos, la batería, cómo se conectan las placas y sensores por dentro.",
+    D: "La cámara, las redes sociales y el diseño estético de la pantalla."
   }],
-  ["¿Qué logro te daría más orgullo?", {
-    p: "Que un programa que hice funcione al primer intento.",
-    e: "Que se prenda algo que armé con cables y componentes.",
-    a: "Que arranque un motor que estaba parado."
+  ["Manualidades y creatividad", "Si te regalan un set de herramientas para crear algo, ¿qué te gustaría que traiga?", {
+    A: "Una computadora potente para instalar programas de diseño y creación.",
+    B: "Llaves inglesas, martillos, taladro y elementos de taller.",
+    C: "Cautín para soldar, cables de colores, foquitos LED y placas chiquitas.",
+    D: "Lápices, pinturas, pinceles y bloques para modelar."
   }],
-  ["Si tuvieras un superpoder, ¿cuál elegirías?", {
-    p: "Entender cualquier programa con solo mirarlo.",
-    e: "Saber cómo funciona cualquier aparato eléctrico.",
-    a: "Saber qué le pasa a un motor con solo escucharlo."
+  ["Relación con los vehículos", "¿Qué es lo que más te llama la atención de los autos, motos o aviones?", {
+    A: "La pantalla de navegación, la computadora de a bordo y los sistemas automáticos.",
+    B: "El sonido del escape, la potencia del motor y cómo funciona la mecánica para andar tan rápido.",
+    C: "Los tableros electrónicos, los sensores de estacionamiento y las luces LED inteligentes.",
+    D: "El diseño exterior, la pintura y lo cómodo de las butacas."
   }],
-  ["Vas a una feria de tecnología. ¿A qué stand vas primero?", {
-    p: "El de videojuegos y aplicaciones nuevas.",
-    e: "El de robots, drones y luces.",
-    a: "El de autos y motos modernos."
+  ["Tipo de instrucciones", "Cuando comprás algo para armar (un mueble, un juguete, un aparato), ¿cómo lo encarás?", {
+    A: "Leo el manual paso a paso de pe a pa antes de tocar nada.",
+    B: "Veo la foto de cómo tiene que quedar y me pongo a armar directamente a ojo.",
+    C: "Separo todos los tornillos y piezas según su tamaño exacto antes de empezar.",
+    D: "Le pido a alguien que lo arme conmigo para ir charlando."
   }],
-  ["En una peli futurista, ¿qué te llama más la atención?", {
-    p: "La inteligencia artificial que piensa sola.",
-    e: "Los robots y los paneles llenos de luces.",
-    a: "Los autos y las naves que van a toda velocidad."
+  ["Reparaciones rápidas", "Si un juguete a control remoto deja de funcionar, ¿qué sospechás primero?", {
+    A: "Que se desconfiguró la señal o el programa que lo controla.",
+    B: "Que se rompió una rueda, un engranaje o el eje de la dirección.",
+    C: "Que hay un cablecito suelto en la plaqueta o las pilas no hacen buen contacto.",
+    D: "Que se quedó sin batería o se golpeó muy fuerte."
   }],
-  ["¿Cómo aprendés mejor?", {
-    p: "Haciendo esquemas y resolviendo ejercicios.",
-    e: "Mirando dibujos y diagramas, y probando con ejemplos reales.",
-    a: "Haciendo las cosas con las manos, tocando y probando."
+  ["Gusto por el detalle", "¿Qué tan perfeccionista sos cuando hacés una tarea?", {
+    A: "Muy ordenado con la estructura: me molesta si los pasos no siguen un orden lógico.",
+    B: "Práctico: me importa que funcione bien y aguante, no me importa si queda un poco sucio o rayado.",
+    C: "Extremadamente minucioso: me enfoco en los detalles microscópicos que nadie ve.",
+    D: "Me enfoco en que se vea lindo a simple vista y termine a tiempo."
   }],
-  ["¿Qué herramienta te gustaría saber usar bien?", {
-    p: "Un programa para crear apps o juegos.",
-    e: "Un tester para medir la electricidad.",
-    a: "Llaves y herramientas de taller."
+  ["Física y matemática", "¿Qué parte de las materias exactas te resulta más pasable o entretenida?", {
+    A: "La lógica, resolver ecuaciones como si fueran acertijos o reglas de juegos.",
+    B: "La física del movimiento: fuerzas, velocidad, palancas y peso.",
+    C: "La física del calor, la electricidad, los imanes y las cargas eléctricas.",
+    D: "Las estadísticas de encuestas, los gráficos sencillos o la geometría básica."
   }],
-  ["¿Qué te gustaría explicarle a un amigo?", {
-    p: "Cómo hace una app para saber qué videos te van a gustar.",
-    e: "Cómo hace un control remoto para cambiar de canal.",
-    a: "Cómo hace un auto para avanzar cuando apretás el acelerador."
+  ["Proyecto de fin de semana", "Si tenés un fin de semana totalmente libre para hacer un proyecto personal, ¿cuál elegís?", {
+    A: "Crear una página web simple, un bot de Discord o modear un videojuego.",
+    B: "Restaurar una bicicleta vieja, pintarla y cambiarle los frenos o cambios.",
+    C: "Armar una luz que se prenda sola cuando entres a tu pieza usando un sensor.",
+    D: "Pintar un cuadro, reordenar toda tu habitación o escribir una historia."
   }],
-  ["Estás aburrido en casa y sin celular. ¿Qué hacés?", {
-    p: "Invento acertijos o dibujo ideas para un juego.",
-    e: "Desarmo un cargador o un control viejo para ver cómo es por dentro.",
-    a: "Busco qué le puedo ajustar o arreglar a la bici o a lo que haya."
+  ["Desarme de objetos", "De chico/a, ¿qué hacías cuando te daban un juguete roto o viejo?", {
+    A: "Inventaba historias con él o intentaba usarlo para otra cosa en la PC.",
+    B: "Lo rompía del todo para ver los motores, ruedas y resortes gigantes que tenía adentro.",
+    C: "Sacaba los tornillos chiquitos con cuidado para ver las plaquetas y las luces.",
+    D: "Lo regalaba o lo guardaba en un cajón sin tocarlo mucho."
   }],
-  ["¿Qué tipo de desafío disfrutás más?", {
-    p: "Los acertijos y los juegos de lógica.",
-    e: "Los que hay que conectar bien para que algo se prenda.",
-    a: "Los que hay que armar o desarmar con herramientas."
+  ["Tipo de lógica", "¿Cómo ordenás las cosas en tu computadora o en tu placard?", {
+    A: "Por carpetas super clasificadas con nombres claros y una estructura impecable.",
+    B: "Por uso: lo pesado y grande abajo, lo que uso todos los días a la mano.",
+    C: "En cajones con divisiones chiquitas para que ningún cable ni pieza se mezcle.",
+    D: "Todo junto en un solo lugar, mientras yo sepa dónde está todo bien."
   }],
-  ["¿Qué te gusta de los videojuegos?", {
-    p: "Cómo están hechas las reglas y los niveles.",
-    e: "Los controles, las luces y los aparatos con los que se juega.",
-    a: "Los juegos de carreras y la sensación de velocidad."
+  ["Automatización", "Si tuvieras que hacer una tarea repetitiva (ej: abrochar 500 hojas), ¿qué hacés?", {
+    A: "Busco si hay una forma digital o creo un truco para no tener que abrochar a mano.",
+    B: "Armo una maquinita de madera o metal con una palanca para abrochar de a 10 juntas.",
+    C: "Modifico una abrochadora común agregándole un pedal eléctrico para hacerlo con el pie.",
+    D: "Pongo música de fondo y abrocho rápido a mano hasta terminar."
   }],
-  ["Se rompe el ventilador en pleno verano. ¿Qué hacés?", {
-    p: "Busco en internet qué le puede pasar según lo que hace.",
-    e: "Lo desenchufo y reviso el cable y el interruptor.",
-    a: "Miro si las aspas o el motor están trabados."
+  ["Ambiente de aprendizaje", "¿Cómo aprendés mejor algo nuevo?", {
+    A: "Leyendo guías, viendo tutoriales en YouTube y probando por mi cuenta en la pantalla.",
+    B: "Viendo a alguien hacerlo en vivo y metiendo mano directamente en el objeto real.",
+    C: "Con diagramas, esquemas con dibujos de partes y explicaciones paso a paso.",
+    D: "En grupo, debatiendo con compañeros y haciendo preguntas en voz alta."
   }],
-  ["Te cuentan de un auto eléctrico. ¿Qué te da más curiosidad?", {
-    p: "La pantalla y las funciones inteligentes.",
-    e: "La batería y cómo se carga.",
-    a: "Cómo hace el motor para mover las ruedas."
+  ["Contacto con la suciedad", "A la hora de trabajar o hacer un proyecto práctico:", {
+    A: "Prefiero no ensuciarme para nada las manos, me gusta trabajar limpio.",
+    B: "No me molesta para nada llenarme de grasa, aceite o polvo si el trabajo lo requiere.",
+    C: "No me molesta trabajar con las manos, pero prefiero mantener todo muy limpio y seco.",
+    D: "Depende del día, pero prefiero evitar la mugre pesada."
   }],
-  ["Visitás una fábrica con la escuela. ¿Qué mirarías más?", {
-    p: "Las computadoras que controlan todo.",
-    e: "Los tableros con cables, luces y botones.",
-    a: "Las máquinas grandes y las piezas que se mueven."
+  ["Evolución tecnológica", "¿Qué avance tecnológico te impresiona más hoy en día?", {
+    A: "La Inteligencia Artificial que puede hablar, escribir y crear imágenes de la nada.",
+    B: "Los autos que aceleran de 0 a 100 en 2 segundos o los cohetes espaciales.",
+    C: "Los microchips del tamaño de un grano de arroz que guardan miles de datos.",
+    D: "Las gafas de realidad virtual para ver películas y jugar."
   }],
-  ["Si pudieras inventar algo, ¿qué sería?", {
-    p: "Una app que te ayude a organizar el día.",
-    e: "Un aparato que prenda las luces cuando entrás a una habitación.",
-    a: "Un vehículo que gaste muy poco combustible."
+  ["Sensación de logro", "¿Qué te da más satisfacción al terminar un trabajo?", {
+    A: "Ver que un sistema que creaste ejecuta todos los pasos sin tirar un solo error.",
+    B: "Ver andar una estructura grande, escuchar el rugido de un motor o ver la máquina funcionando.",
+    C: "Ver que una plaqueta super chiquita prende la luz justa en el momento exacto.",
+    D: "Recibir la felicitación de la gente y ver que les gustó la idea general."
   }],
-  ["¿Qué se te da mejor?", {
-    p: "Encontrar el error en una cuenta o en un razonamiento.",
-    e: "Seguir un dibujo o esquema para conectar cosas.",
-    a: "Armar un mueble o un juguete con el manual y las piezas."
+  ["Herramientas digitales favoritas", "Si tenés que usar la computadora para crear algo, ¿qué tipo de programa preferís?", {
+    A: "Editores de código, bloques de notas complejos o bases de datos.",
+    B: "Programas de diseño 3D para modelar piezas duras, autos o estructuras mecánicas.",
+    C: "Simuladores de circuitos, donde podés conectar fuentes y medir voltajes virtuales.",
+    D: "Programas de edición de fotos, videos o presentaciones de diapositivas."
   }],
-  ["¿Con qué te sentís más cómodo?", {
-    p: "Con la compu y el teclado.",
-    e: "Con un soldador y cables chiquitos.",
-    a: "Con herramientas grandes y piezas pesadas."
+  ["Resolución de imprevistos", "Se corta la luz en medio de una reunión/fiesta en tu casa, ¿qué hacés?", {
+    A: "Busco rápido en el celular si es un corte del barrio o entro a la web de la empresa de luz.",
+    B: "Busco una linterna grande y voy a revisar si saltó la palanca principal del pilar afuera.",
+    C: "Reviso el tablero eléctrico interior, los fusibles y si hay olor a quemado en algún enchufe.",
+    D: "Prendo velas, pongo música en el celular y espero a que vuelva."
   }],
-  ["Alguien te muestra una tecnología nueva. ¿Qué preguntás?", {
-    p: "¿Qué instrucciones sigue para hacer eso?",
-    e: "¿Con qué componentes y con qué energía funciona?",
-    a: "¿Qué piezas se mueven y cuánta fuerza tiene?"
+  ["Interés por las novedades", "Si entrás a una tienda de tecnología/herramientas, ¿a qué pasillo vas primero?", {
+    A: "Al de computadoras, monitores, teclados gamer y almacenamiento.",
+    B: "Al de herramientas de mano, taladros, cajas de herramientas y repuestos de motores.",
+    C: "Al de componentes, sensores, cables, soldadores y kits de robótica.",
+    D: "Al de auriculares, parlantes Bluetooth, accesorios y estética."
   }],
-  ["¿Qué te gustaría aprender antes de terminar el colegio?", {
-    p: "A programar mi propia aplicación.",
-    e: "A armar un circuito que haga algo útil.",
-    a: "A cambiar el aceite y las ruedas de un auto."
+  ["Control de calidad", "Te piden verificar que un producto esté bien hecho, ¿en qué te fijás primero?", {
+    A: "En que cumpla con todas las reglas del manual sin saltarse ningún paso.",
+    B: "En la resistencia del material, que no se rompa si se cae y aguante el esfuerzo.",
+    C: "En que todas las conexiones interiores estén bien soldadas y no hagan falso contacto.",
+    D: "En que el empaque esté prolijo y la terminación se vea bien a la vista."
   }],
-  ["Tenés que elegir un proyecto para la feria de ciencias. ¿Cuál hacés?", {
-    p: "Un juego o una app para estudiar.",
-    e: "Una alarma con luces y sonido.",
-    a: "Un autito a escala que se mueva solo."
+  ["Estilo de pensamiento", "Cuando pensás en cómo funciona tu casa, ¿en qué te enfocás?", {
+    A: "En la rutina familiar: a qué hora se prende la tele, a qué hora se come y cómo se organiza el día.",
+    B: "En la estructura: las tuberías de agua, el techo, las puertas y los portones.",
+    C: "En la red de cables, dónde están los enchufes, la caja térmica y el Wi-Fi.",
+    D: "En la decoración, los colores de las paredes y la comodidad de los muebles."
   }],
-  ["¿Qué es lo que más te frustra?", {
-    p: "Que algo no funcione y no encontrar dónde está el error.",
-    e: "Que algo no prenda y no saber por qué.",
-    a: "Que algo se trabe y no poder moverlo ni aflojarlo."
+  ["Trabajo bajo presión", "Tenés que arreglar algo urgente antes de que termine el día, ¿cómo reaccionás?", {
+    A: "Mantengo la calma, analizo la causa raíz con lógica y aplico la solución probada.",
+    B: "Le meto mano con fuerza, cambio piezas rápido y me adapto sobre la marcha.",
+    C: "Me concentro al máximo, verifico punto por punto con paciencia para no hacer un cortocircuito.",
+    D: "Pido ayuda a un amigo para repartirnos el trabajo y terminar más rápido."
   }],
-  ["Te dan un taller propio. ¿Qué ponés primero?", {
-    p: "Computadoras y pantallas.",
-    e: "Una mesa con instrumentos y cajitas con componentes.",
-    a: "Un banco con herramientas y un elevador para autos."
+  ["Atracción por el movimiento", "¿Qué te parece más fascinante de ver en marcha?", {
+    A: "Una pantalla llena de números y datos cambiando a toda velocidad de forma automática.",
+    B: "Un motor gigante con pistones moviéndose y engranajes girando con mucha fuerza.",
+    C: "Un brazo robótico chiquito agarrando un componente diminuto con precisión milimétrica.",
+    D: "Una línea de ensamblaje con muchas personas trabajando coordinadas."
   }],
-  ["¿Qué trabajo te suena más entretenido para el futuro?", {
-    p: "Crear apps, juegos o páginas web.",
-    e: "Instalar y arreglar equipos eléctricos y electrónicos.",
-    a: "Revisar y reparar autos y motos."
+  ["Romper cosas", "Cuando se te rompe un objeto muy querido, ¿qué pensás?", {
+    A: "“Voy a buscar si a alguien más le pasó en un foro de internet para ver cómo lo arregló”.",
+    B: "“Lo voy a abrir, si total ya está roto, capaz con un poco de maña y pegar piezas lo salvo”.",
+    C: "“Seguro se desoldó una pata interna, si consigo el repuesto chiquito lo dejo como nuevo”.",
+    D: "“Qué lástima, voy a juntar plata para comprarme uno nuevo”."
   }],
-  ["Al terminar el colegio, ¿cómo te gustaría que te recuerden?", {
-    p: "Como quien hacía programas y juegos geniales.",
-    e: "Como quien arreglaba cualquier cosa eléctrica.",
-    a: "Como quien dejaba andando cualquier motor."
+  ["Elección de optativa", "Si pudieras elegir un taller extra gratuito en la escuela/universidad, ¿cuál te anotás?", {
+    A: "Taller de creación de apps móviles y videojuegos.",
+    B: "Taller de mecánica ligera, motores y uso de herramientas de taller.",
+    C: "Taller de robótica básica, sensores y electrónica casera.",
+    D: "Taller de diseño gráfico, oratoria y marketing digital."
   }]
 ];
 
@@ -729,6 +774,10 @@ Q.forEach((_, k) => {
 const sc = { p: 0, e: 0, a: 0 };
 let paso = 0;       // posición actual dentro de FLOW
 let ejRes = [];     // resultados de los mini desafíos
+let ejHechos = {};  // mini desafíos ya resueltos (no se repiten al volver atrás)
+let resp = [];      // letra elegida en cada paso de FLOW (para poder deshacer)
+let ordenes = {};   // orden mezclado de las opciones de cada pregunta
+let dCount = 0;     // cuántas veces eligió la opción "D"
 let user = null;    // { nombre, curso }
 
 const box = document.getElementById("box");
@@ -797,7 +846,7 @@ st.insertAdjacentHTML("beforeend", `<p class="nota">Combina ${Math.round(CONFIG.
 function calcular() {
   const R = {};
   for (const k in SP) {
-    const q = sc[k] / N;
+    const q = sc[k] / (N * PTS_MAX);
     const ex = ejRes.filter(r => r.esp === k);
     const p = ex.length ? ex.reduce((s, r) => s + r.pts, 0) / ex.length : 0;
     R[k] = { q, p, total: CONFIG.PESO_TEST * q + CONFIG.PESO_PRACTICA * p };
@@ -857,7 +906,7 @@ document.getElementById("logout").onclick = login;
 
 function reiniciar() {
   sc.p = sc.e = sc.a = 0;
-  paso = 0; ejRes = [];
+  paso = 0; ejRes = []; ejHechos = {}; resp = []; ordenes = {}; dCount = 0;
   home();
 }
 
@@ -875,7 +924,7 @@ function home() {
         <div class="dato"><b>${EX.length}</b><span>mini desafíos</span></div>
         <div class="dato"><b>~10</b><span>minutos</span></div>
       </div>
-      <p class="muted">Los mini desafíos van apareciendo en el medio de las preguntas. Son cortitos y tenés una pista si te trabás.</p>
+      <p class="muted">Los mini desafíos van apareciendo en el medio de las preguntas. Son cortitos y tenés una pista si te trabás. Si te equivocás al tocar una respuesta, podés volver a la pregunta anterior.</p>
       <button class="btn big" id="go">Iniciar test orientativo</button>
       <div class="slots">
         <div class="contenedor img-inicio-1"></div>
@@ -889,14 +938,38 @@ function home() {
 
 /* ===== 3) Recorrido mezclado ===== */
 function avanzar() {
+  // si un mini desafío ya se resolvió (porque volviste atrás), no se repite
+  while (paso < FLOW.length && FLOW[paso].t === "ex" && ejHechos[FLOW[paso].k]) paso++;
   if (paso >= FLOW.length) return end();
   const f = FLOW[paso];
   if (f.t === "q") showQ(f.k); else showEx(f.k);
 }
 
+/* ===== Volver a la pregunta anterior ===== */
+function hayAnterior() {
+  for (let j = paso - 1; j >= 0; j--) if (FLOW[j].t === "q") return true;
+  return false;
+}
+function sumar(letra, signo) {
+  for (const k in sc) sc[k] += signo * PTS[letra][k];
+  if (letra === "D") dCount += signo;
+}
+function atras() {
+  let j = paso - 1;
+  while (j >= 0 && FLOW[j].t !== "q") j--;
+  if (j < 0) return;
+  if (resp[j]) { sumar(resp[j], -1); resp[j] = undefined; }
+  paso = j;
+  avanzar();
+}
+function btnAtras() {
+  return `<div class="acts navrow"><button type="button" class="btn ghost" id="back" ${hayAnterior() ? "" : "disabled"}>← Pregunta anterior</button></div>`;
+}
+
 function showQ(k) {
-  const [q, o] = Q[k];
-  const ks = Object.keys(o).sort(() => Math.random() - .5);
+  const [tema, q, o] = Q[k];
+  if (!ordenes[k]) ordenes[k] = Object.keys(o).sort(() => Math.random() - .5);
+  const ks = ordenes[k];
   const dice = k === Math.floor(N / 2) ? "¡Ya pasaste la mitad de las preguntas!" :
                k === N - 1 ? "¡Última pregunta!" : DICE_Q[k % DICE_Q.length];
   mascota("q", dice);
@@ -904,22 +977,26 @@ function showQ(k) {
     <div class="paso">
       <div class="count">Pregunta ${k + 1} de ${N}</div>
       ${prog()}
+      <span class="tema">${esc(tema)}</span>
       <p class="q">${esc(q)}</p>
       <div id="ops"></div>
+      ${btnAtras()}
     </div>
   `;
   const ops = document.getElementById("ops");
   ks.forEach((key, n) => {
     const b = document.createElement("button");
     b.className = "opt";
-    b.innerHTML = `<span class="ltr">${"ABC"[n]}</span><span>${esc(o[key])}</span>`;
+    b.innerHTML = `<span class="ltr">${"ABCD"[n]}</span><span>${esc(o[key])}</span>`;
     b.onclick = () => {
-      sc[key]++;
+      resp[paso] = key;
+      sumar(key, 1);
       paso++;
       avanzar();
     };
     ops.appendChild(b);
   });
+  document.getElementById("back").onclick = atras;
 }
 
 /* ===== 4) Mini desafíos ===== */
@@ -938,8 +1015,10 @@ function showEx(k) {
       <div id="exb"></div>
       <div class="fb" id="fb" aria-live="polite"></div>
       <div class="acts" id="exn"></div>
+      ${btnAtras()}
     </div>
   `;
+  document.getElementById("back").onclick = atras;
   const exb = document.getElementById("exb");
   const fb = document.getElementById("fb");
   const exn = document.getElementById("exn");
@@ -947,6 +1026,7 @@ function showEx(k) {
   const fin = (pts, detalle) => {
     if (hecho) return;
     hecho = true;
+    ejHechos[k] = true;
     ejRes.push({ id: e.id, esp: e.esp, t: e.t, pts, intentos, seg: Math.max(1, Math.round((Date.now() - t0) / 1000)), detalle });
     decir(pts >= 1 ? "¡Bien ahí! 🎉" : pts > 0 ? "¡Casi! Pero lo lograste." : "No pasa nada, seguimos.");
     const b = document.createElement("button");
@@ -1059,6 +1139,9 @@ function end() {
     const ic = r.pts >= 1 ? "✅" : r.pts > 0 ? "🟡" : "❌";
     return `<li><span>${ic} ${esc(r.t)}</span><small>${Math.round(r.pts * 100)}% · ${r.intentos} intento${r.intentos > 1 ? "s" : ""} · ${r.seg} s</small></li>`;
   }).join("");
+  const aviso = dCount >= CONFIG.AVISO_NEUTRO
+    ? `<div class="aviso">💬 Elegiste muchas respuestas ligadas a la comunicación, el diseño y el trabajo con otras personas. No es nada malo: además de esta especialidad, quizás te interesen también carreras como Diseño, Comunicación o Administración. Charlalo con tus profesores.</div>`
+    : "";
 
   box.innerHTML = `
     <div class="res paso">
@@ -1077,8 +1160,12 @@ function end() {
         <div class="contenedor img-${w}-2"></div>
       </div>
       ${s.frase ? `<blockquote class="frase" style="border-color:${s.c}">“${s.frase[0]}”<cite>—${s.frase[1]}</cite></blockquote>` : ""}
+      ${aviso}
       <p class="sub">Revisá las barras estadísticas de abajo para analizar tus afinidades generales. Te recomendamos charlar el resultado con tus profesores y familia.</p>
-      <button class="btn" id="re">Volver al inicio</button>
+      <div class="acts">
+        <button class="btn ghost" id="rback">← Volver a la última pregunta</button>
+        <button class="btn" id="re">Volver al inicio</button>
+      </div>
       <div class="contacto">
         <h3>CONTACTANOS :D *risita*</h3>
         <h4><a href="mailto:julianrafaelmeza17@gmail.com">julianrafaelmeza17@gmail.com</a></h4>
@@ -1087,6 +1174,7 @@ function end() {
     </div>
   `;
   document.getElementById("re").onclick = reiniciar;
+  document.getElementById("rback").onclick = () => { st.hidden = true; atras(); };
 }
 
 login();
