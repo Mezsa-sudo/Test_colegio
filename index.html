@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>¿Qué especialidad elegir? – IPET 57</title>
+<style>
+:root {
+  /* ===== MODO CLARO (tonos púrpura suaves) ===== */
+  --bg: #f6f2ff;
+  --card: rgba(255, 255, 255, 0.93);
+  --text: #2a2340;
+  --muted: #6f6690;
+  --line: #e3dbfa;
+  --accent: #7c5cf0;
+  --accent-soft: #f0eaff;
+  --btn-a: #7c5cf0;
+  --btn-b: #a58bff;
+  --h1-a: #6d4fe0;
+  --h1-b: #b08cf5;
+  --ok: #15803d;
+  --ok-bg: #e7f7ed;
+  --mid: #a16207;
+  --mid-bg: #fdf3d8;
+  --bad: #b91c1c;
+  --bad-bg: #fdeaea;
+  --shadow: 0 10px 34px rgba(124, 92, 240, 0.13);
+  /* ==== IMAGEN DE FONDO GENERAL ====
+     Remplaza la URL o usa Data URI */
+  --bg-image: url('img/fondo_colegio.jpg');
+  --overlay: rgba(246, 242, 255, 0.9);
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* ===== MODO OSCURO (automático según el dispositivo) ===== */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #14101f;
+    --card: rgba(30, 24, 48, 0.94);
+    --text: #efeaff;
+    --muted: #a79fc4;
+    --line: #372d57;
+    --accent: #a78bfa;
+    --accent-soft: #2a2145;
+    --h1-a: #b9a2ff;
+    --h1-b: #e0d0ff;
+    --ok: #6ee7a0;
+    --ok-bg: #12301f;
+    --mid: #fcd34d;
+    --mid-bg: #3a2f10;
+    --bad: #fca5a5;
+    --bad-bg: #3a1717;
+    --shadow: 0 10px 34px rgba(0, 0, 0, 0.45);
+    --overlay: rgba(20, 16, 31, 0.9);
+  }
+}
+
+/* ===== MODO OSCURO (manual, con el botón) ===== */
+:root[data-theme="dark"] {
+  --bg: #14101f;
+  --card: rgba(30, 24, 48, 0.94);
+  --text: #efeaff;
+  --muted: #a79fc4;
+  --line: #372d57;
+  --accent: #a78bfa;
+  --accent-soft: #2a2145;
+  --h1-a: #b9a2ff;
+  --h1-b: #e0d0ff;
+  --ok: #6ee7a0;
+  --ok-bg: #12301f;
+  --mid: #fcd34d;
+  --mid-bg: #3a2f10;
+  --bad: #fca5a5;
+  --bad-bg: #3a1717;
+  --shadow: 0 10px 34px rgba(0, 0, 0, 0.45);
+  --overlay: rgba(20, 16, 31, 0.9);
+}
+
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background-color: var(--bg);
+  /* resplandor púrpura + overlay legible + imagen de fondo */
+  background-image:
+    radial-gradient(900px 420px at 8% -8%, rgba(167, 139, 250, 0.32), transparent 70%),
+    radial-gradient(700px 380px at 100% 0%, rgba(196, 164, 255, 0.22), transparent 70%),
+    linear-gradient(var(--overlay), var(--overlay)),
+    var(--bg-image);
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  color: var(--text);
+  font-family: ui-rounded, "SF Pro Rounded", "Nunito", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.5;
+}
+
+main { max-width: 680px; margin: 0 auto; padding: 22px 16px 36px; }
+
+/* ===== Encabezado ===== */
+.top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+h1 {
+  font-size: 1.65rem;
+  line-height: 1.15;
+  margin: 0 0 4px;
+  letter-spacing: -0.01em;
+  background: linear-gradient(90deg, var(--h1-a), var(--h1-b));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.sub { color: var(--muted); margin: 0 0 18px; }
+.top .sub { margin: 0; font-size: .92rem; }
+.pill {
+  flex: none;
+  font: inherit;
+  font-size: .85rem;
+  font-weight: 600;
+  color: var(--text);
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 8px 14px;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: border-color .15s;
+}
+.pill:hover { border-color: var(--accent); }
+.session {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  font-size: .88rem; color: var(--muted); margin: 0 0 12px;
+}
+.session b { color: var(--text); }
+.link { font: inherit; font-size: .85rem; color: var(--accent); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; }
+
+/* ===== Tarjetas ===== */
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 22px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(6px);
+}
+
+.prog { height: 7px; background: var(--line); border-radius: 7px; overflow: hidden; margin-bottom: 14px; }
+.prog i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--btn-a), var(--btn-b)); transition: width .3s; }
+.count { font-size: .82rem; color: var(--muted); margin-bottom: 6px; }
+.q { font-size: 1.15rem; font-weight: 700; margin: 0 0 14px; line-height: 1.35; }
+
+.opt {
+  display: block; width: 100%; text-align: left;
+  font: inherit; color: inherit;
+  background: transparent;
+  border: 1.5px solid var(--line);
+  border-radius: 14px;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: border-color .15s, background .15s;
+}
+.opt:not(:disabled):hover { border-color: var(--accent); background: var(--accent-soft); }
+.opt:disabled { cursor: default; opacity: .75; }
+.opt.right { border-color: var(--ok); background: var(--ok-bg); opacity: 1; }
+.opt.wrong { border-color: var(--bad); background: var(--bad-bg); opacity: 1; }
+
+.btn {
+  font: inherit; font-weight: 700;
+  background: linear-gradient(135deg, var(--btn-a), var(--btn-b));
+  color: #fff;
+  border: 0; border-radius: 12px;
+  padding: 11px 20px;
+  cursor: pointer;
+  margin-top: 8px;
+  box-shadow: 0 6px 16px rgba(124, 92, 240, 0.28);
+  text-decoration: none;
+  display: inline-block;
+}
+.btn:disabled { opacity: .45; cursor: default; box-shadow: none; }
+.btn.ghost { background: transparent; color: var(--accent); border: 1.5px solid var(--line); box-shadow: none; }
+.btn.ghost:not(:disabled):hover { border-color: var(--accent); }
+.big { font-size: 1.08rem; padding: 14px 28px; width: 100%; }
+.acts { display: flex; gap: 10px; flex-wrap: wrap; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+.home p { margin: 0 0 14px; }
+
+/* ===== Inicio de sesión ===== */
+.login h2 { margin: 0 0 4px; font-size: 1.35rem; }
+.field { display: block; margin-bottom: 14px; }
+.field span { display: block; font-size: .85rem; font-weight: 600; margin-bottom: 5px; }
+.field input, .numrow input {
+  width: 100%;
+  font: inherit; color: var(--text);
+  background: var(--bg);
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  padding: 11px 13px;
+}
+.field input:focus, .numrow input:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px var(--accent-soft); }
+.err { min-height: 1.2em; color: var(--bad); font-size: .88rem; margin: -4px 0 6px; }
+
+/* ===== Ejercicios prácticos ===== */
+.code {
+  margin: 0 0 14px; padding: 14px 16px;
+  background: var(--bg); border: 1px solid var(--line); border-radius: 14px;
+  font-family: ui-monospace, "SF Mono", Consolas, monospace; font-size: .92rem;
+  overflow-x: auto; white-space: pre;
+}
+.lab2 { font-size: .85rem; font-weight: 700; color: var(--muted); margin: 10px 0 6px; }
+.pool { display: grid; gap: 8px; }
+.step {
+  font: inherit; color: inherit; text-align: left;
+  background: var(--accent-soft); border: 1.5px solid transparent; border-radius: 12px;
+  padding: 10px 12px; cursor: pointer;
+}
+.step:hover { border-color: var(--accent); }
+.muted { color: var(--muted); font-size: .9rem; }
+.mine { margin: 0; padding-left: 24px; display: grid; gap: 6px; }
+.mine li { padding: 8px 10px; border: 1.5px solid var(--line); border-radius: 10px; }
+.mine li.empty { list-style: none; margin-left: -24px; color: var(--muted); border-style: dashed; }
+.mine li.good { border-color: var(--ok); background: var(--ok-bg); }
+.mine li.badp { border-color: var(--bad); background: var(--bad-bg); }
+.numrow { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.numrow input { flex: 1 1 140px; width: auto; }
+.numrow .btn { margin-top: 0; }
+.unit { font-weight: 700; color: var(--muted); }
+.fb { margin-top: 12px; border-radius: 12px; padding: 0; font-size: .95rem; }
+.fb:not(:empty) { padding: 10px 12px; background: var(--accent-soft); }
+.fb.ok { background: var(--ok-bg); color: var(--ok); }
+.fb.mid { background: var(--mid-bg); color: var(--mid); }
+.fb.bad { background: var(--bad-bg); color: var(--bad); }
+.fb ol { margin: 6px 0 0; padding-left: 22px; color: var(--text); }
+
+/* ===== IMÁGENES CONTENEDORES ===== */
+.slots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; }
+.contenedor { aspect-ratio: 1/1; border-radius: 16px; background-color: var(--line); background-size: cover; background-position: center; background-repeat: no-repeat; }
+
+.img-inicio-1 { background-image: url('img/programa.png'); }
+.img-inicio-2 { background-image: url('img/images.png'); }
+.img-inicio-3 { background-image: url('img/automotor.png'); }
+
+.img-p-1 { background-image: url('img/programa.png'); }
+.img-p-2 { background-image: url('img/img/gato_programacion.png'); }
+
+.img-e-1 { background-image: url('img/images.png'); }
+.img-e-2 { background-image: url('img/electricidad_meme.png'); }
+
+.img-a-1 { background-image: url('img/automotor.png'); }
+.img-a-2 { background-image: url('img/img/gato_mecanico.png'); }
+
+/* ===== Barras de estadísticas al final ===== */
+#stats { margin-top: 18px; text-align: center; }
+#stats h3 { font-size: 1rem; margin: 0 0 12px; }
+.row { margin-bottom: 10px; text-align: left; }
+.lab { display: flex; justify-content: space-between; font-size: .85rem; margin-bottom: 3px; }
+.track { height: 12px; background: var(--line); border-radius: 8px; overflow: hidden; }
+.fill { height: 100%; width: 0; border-radius: 8px; transition: width .5s ease; }
+.nota { font-size: .8rem; color: var(--muted); margin: 12px 0 0; }
+
+/* ===== Vista de resultados ===== */
+.hero { margin: -22px -22px 18px; padding: 30px 20px; color: #fff; text-align: center; }
+.hero .em { font-size: 3rem; line-height: 1; }
+.hero h2 { margin: 8px 0 4px; font-size: 1.6rem; }
+.hero p { margin: 0; opacity: .94; }
+.res h3 { margin: 18px 0 6px; font-size: 1rem; }
+.res ul { margin: 0; padding-left: 20px; }
+.res li { margin-bottom: 4px; }
+.pics { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 18px 0; }
+.frase {
+  margin: 18px 0; padding: 14px 16px;
+  border-left: 5px solid;
+  background: var(--accent-soft);
+  border-radius: 12px;
+  font-size: 1.25rem; font-weight: 800; letter-spacing: .01em;
+}
+.frase cite { display: block; font-size: .85rem; font-weight: 400; color: var(--muted); margin-top: 4px; font-style: normal; }
+.tag { display: inline-block; border-radius: 999px; padding: 4px 13px; font-size: .82rem; font-weight: 700; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,.25); margin-bottom: 8px; }
+.res ul.ejlist { list-style: none; padding: 0; display: grid; gap: 6px; }
+.ejlist li { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; padding: 8px 10px; border: 1px solid var(--line); border-radius: 10px; margin: 0; }
+.ejlist small { color: var(--muted); }
+
+/* ===== Pie de página ===== */
+.foot { margin-top: 26px; text-align: center; font-size: .85rem; color: var(--muted); }
+.foot .j { color: var(--accent); font-weight: 800; }
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+@media (max-width: 440px) { h1 { font-size: 1.35rem; } .top { flex-direction: column; } }
+</style>
+</head>
+<body>
+
+<main>
+  <header class="top">
+    <div>
+      <h1>¿Qué especialidad elegir?</h1>
+      <p class="sub">IPET 57 · Comodoro Martín Rivadavia — Test orientativo para 3er año.</p>
+    </div>
+    <button class="pill" id="theme" type="button"></button>
+  </header>
+
+  <div class="session" id="who" hidden>
+    <span>👤 <b id="whoname"></b></span>
+    <button class="link" id="logout" type="button">Cerrar sesión</button>
+  </div>
+
+  <div class="card" id="box"></div>
+  <div class="card" id="stats" hidden><h3>Afinidad orientativa obtenida:</h3></div>
+
+  <footer class="foot">Página/Test hecho por Julian Rafael Meza y la sutil <span class="j">J</span></footer>
+</main>
+
+<script>
+/* ===== CONFIGURACIÓN ===== */
+const CONFIG = {
+  PESO_TEST: 0.7,       // cuánto pesan las 20 preguntas en el resultado
+  PESO_PRACTICA: 0.3    // cuánto pesan los ejercicios prácticos
+};
+
+const SP = {
+  p: {
+    n: "Programación",
+    c: "#7c3aed",
+    g: "linear-gradient(135deg,#7c3aed,#4f46e5)",
+    em: "💻",
+    lema: "Crear con lógica, estructuras y sistemas",
+    frase: ["BITE ME", "Uzi"],
+    d: "Tenés inclinación por el razonamiento abstracto, la resolución de problemas lógicos y el modelado de datos para crear soluciones digitales dinámicas.",
+    ap: ["Lógica algorítmica y estructuras de control", "Desarrollo de software, sitios web e interfaces interactivas", "Gestión de bases de datos y arquitectura de sistemas"],
+    sal: ["Desarrollador/a de software y aplicaciones", "Especialista en desarrollo web y bases de datos", "Soporte de sistemas y arquitectura de código"]
+  },
+  e: {
+    n: "Electrónica",
+    c: "#eab308",
+    g: "linear-gradient(135deg,#eab308,#f97316)",
+    em: "🔌",
+    lema: "Controlar el flujo de señales y componentes",
+    frase: ["Si quieres encontrar los secretos del universo, piensa en términos de energía, frecuencia y vibración.", "Nikola Tesla"],
+    d: "Te atrae entender la física detrás de los sistemas: cómo viajan las señales, la automatización, el procesamiento de hardware y el control de dispositivos.",
+    ap: ["Análisis de circuitos, señales y mediciones de precisión", "Sistemas de automatización, microcontroladores y sensores", "Diseño de placas, robótica y mantenimiento de hardware"],
+    sal: ["Técnico/a en electrónica e instrumental", "Automatización industrial y sistemas integrados", "Reparación y mantenimiento de hardware de alta precisión"]
+  },
+  a: {
+    n: "Automotor",
+    c: "#dc2626",
+    g: "linear-gradient(135deg,#dc2626,#9f1239)",
+    em: "🔧",
+    lema: "Comprender la fuerza, la mecánica y los sistemas térmicos",
+    frase: ["La máquina no aísla al hombre de los grandes problemas de la naturaleza, sino que lo introduce más profundamente en ellos.", "Antoine de Saint-Exupéry"],
+    d: "Sentís afinidad por la física aplicada, la transmisión de energía mecánica, la termodinámica y la resolución práctica de fallas complejas.",
+    ap: ["Termodinámica, motores de combustión e hibridación", "Diagnóstico integral y sistemas de transmisión de potencia", "Mantenimiento preventivo y ajuste de mecanismos térmicos"],
+    sal: ["Técnico/a superior en mecánica automotriz", "Gestión y dirección técnica de talleres", "Diagnóstico electromecánico de sistemas dinámicos"]
+  }
+};
+
+const Q = [
+  ["Cuando enfrentás un problema complejo, ¿qué enfoque te resulta más natural?", {
+    p: "Modelar el proceso paso a paso hasta encontrar una regla que resuelva cualquier caso similar.",
+    e: "Analizar cómo interactúan las partes internas y qué señal o flujo está fallando en el sistema.",
+    a: "Inspeccionar las fuerzas mecánicas o los componentes físicos en acción para ver dónde está el desgaste."
+  }],
+  ["¿Qué tipo de proyectos atraen más tu curiosidad técnica?", {
+    p: "Aquellos donde pueda estructurar información, crear reglas y obtener resultados automatizados.",
+    e: "Los que involucran procesar respuestas del entorno mediante sensores, módulos e indicadores.",
+    a: "Los que implican ensamblar, ajustar transmisiones y optimizar el rendimiento de sistemas mecánicos."
+  }],
+  ["¿Cuál de estos temas te despierta más ganas de profundizar en una clase?", {
+    p: "La lógica matemática detrás del funcionamiento del software actual.",
+    e: "Los principios electromagnéticos que permiten transmitir energía y datos.",
+    a: "Los principios físicos de la termodinámica, la presión y la transmisión de movimiento."
+  }],
+  ["Al observar un dispositivo avanzado en funcionamiento, te preguntás...", {
+    p: "¿Qué arquitectura de instrucciones ejecuta para procesar todo sin fallas?",
+    e: "¿Qué circuito integrado gestiona los componentes eléctricos en tiempo real?",
+    a: "¿Cómo interactúan los mecanismos internos para soportar la fricción y la fuerza ejercida?"
+  }],
+  ["Si tuvieras que solucionar un fallo inesperado, prefieres...", {
+    p: "Rastrear la secuencia de instrucciones para corregir el paso donde la lógica falla.",
+    e: "Usar instrumentos de medición para verificar el comportamiento de cada nodo del sistema.",
+    a: "Desarmar la estructura paso a paso para evaluar el estado y ajuste de los componentes."
+  }],
+  ["¿En qué tipo de entorno de taller te sentirías más cómodo pasando horas?", {
+    p: "Un entorno enfocado en la estructuración de ideas, sintaxis y plataformas digitales.",
+    e: "Un mesa de trabajo equipada con instrumental de prueba, soldadores y componentes discretos.",
+    a: "Un taller equipado con bancos de prueba, prensas y herramientas para sistemas de gran escala."
+  }],
+  ["¿Qué rol tendés a asumir cuando trabajás en equipo para resolver un desafío?", {
+    p: "Quien organiza la estructura lógica y asegura que todo el proceso siga una secuencia coherente.",
+    e: "Quien verifica las conexiones interdependientes y asegura la compatibilidad entre partes.",
+    a: "Quien ejecuta el montaje técnico, asegurando que la estructura física quede firme y funcional."
+  }],
+  ["¿Qué área de las ciencias aplicadas capta más tu atención?", {
+    p: "La matemática discreta y la teoría de la información.",
+    e: "La física electromagnética y la teoría de circuitos.",
+    a: "La física mecánica, la cinemática y la dinámica de fluidos."
+  }],
+  ["¿Con cuál de estos elementos sentirías mayor satisfacción al dominar su uso?", {
+    p: "Un entorno de desarrollo abstracto para crear herramientas escalables.",
+    e: "Un osciloscopio o un multímetro para diagnosticar ondas y variaciones de tensión.",
+    a: "Instrumentos de precisión como calibres y torquímetros para ajustar mecanismos."
+  }],
+  ["¿Qué logro técnico te genera mayor interés para presentar en una exposición?", {
+    p: "Una plataforma web o software capaz de procesar datos complejos en tiempo real.",
+    e: "Un sistema automatizado de respuesta y control activado por sensores del entorno.",
+    a: "Un prototipo mecánico funcional de transmisión de potencia o transformación energética."
+  }],
+  ["Si tuvieras que explicar cómo funciona algo, te enfocarías en...", {
+    p: "La lógica detrás de la toma de decisiones del sistema.",
+    e: "Las variaciones de energía y las señales que activan cada módulo.",
+    a: "La relación entre la fuerza aplicada y la respuesta física del mecanismo."
+  }],
+  ["¿Qué tipo de desafíos de ingenio te resulta más motivador?", {
+    p: "Acertijos de lógica pura, algoritmos y patrones conceptuales.",
+    e: "Puzles de flujo de corriente, switches e interpretación de esquemas técnicos.",
+    a: "Desafíos de engranajes, palancas y balance de pesos mecánicos."
+  }],
+  ["¿Qué tipo de documentación técnica te parece más interesante de interpretar?", {
+    p: "Diagramas de flujo de procesos, estructuras de datos y sintaxis de programación.",
+    e: "Esquemas eléctricos, diagramas de bloques y planos de pines de componentes.",
+    a: "Planos despiezados de conjuntos mecánicos, vistas en corte y especificaciones de tolerancia."
+  }],
+  ["Si quisieras mejorar la eficiencia de un sistema, buscarías...", {
+    p: "Optimizar las instrucciones para que el proceso sea más rápido y consuma menos recursos.",
+    e: "Reducir la resistencia, mejorar el filtrado de señales o cambiar el control de potencia.",
+    a: "Disminuir la fricción, mejorar la lubricación y optimizar la relación de transmisión."
+  }],
+  ["Al proyectarte en tu trayectoria técnica profesional, te imaginas...", {
+    p: "Especializándote en soluciones digitales, plataformas en la nube o ciberseguridad.",
+    e: "Diseñando hardware, robótica industrial o placas de control automatizadas.",
+    a: "Dirigiendo diagnósticos electromecánicos avanzados o desarrollo en la industria automotriz."
+  }],
+  ["Frente a una interrupción imprevista de un servicio o máquina, lo primero que analizás es...", {
+    p: "Si se produjo una condición no contemplada en las reglas del sistema.",
+    e: "Si hubo un pico de carga o un fallo en el suministro y los componentes de protección.",
+    a: "Si ocurrió un sobrecalentamiento, ruptura o falla de alineación en partes móviles."
+  }],
+  ["¿Qué concepto considerás más fascinante?", {
+    p: "La capacidad de representar cualquier aspecto de la realidad mediante código binario.",
+    e: "La capacidad de transformar señales invisibles en movimientos o luz con absoluta precisión.",
+    a: "La capacidad de transformar la energía térmica del combustible en fuerza mecánica pura."
+  }],
+  ["Si te piden construir un dispositivo de seguridad para un espacio, te encargarías de...", {
+    p: "Escribir la lógica de validación de usuarios y alertas del sistema.",
+    e: "Integrar los sensores ópticos, de movimiento y el circuito de disparo del evento.",
+    a: "Diseñar los cierres mecánicos de alta resistencia y los mecanismos de bloqueo."
+  }],
+  ["¿En qué tipo de innovación tecnológica te gustaría colaborar en el futuro?", {
+    p: "Modelos de inteligencia artificial o entornos de software complejos.",
+    e: "Sistemas embebidos para tecnología médica, espacial o robótica de precisión.",
+    a: "Sistemas de propulsión eficiente, vehículos eléctricos o mecánica de alta competición."
+  }],
+  ["¿Qué habilidad técnica te gustaría que caracterice tu perfil profesional?", {
+    p: "Capacidad analítica para traducir cualquier requerimiento en una solución de software.",
+    e: "Destreza para diseñar, medir e integrar sistemas electrónicos complejos.",
+    a: "Dominio integral del funcionamiento electromecánico y capacidad de diagnóstico de fallas."
+  }]
+];
+
+/* ===== EJERCICIOS PRÁCTICOS =====
+   Se juzga cómo se resuelven: si acierta, a cuántos intentos y cuánto tarda.
+   tipo "orden"  → ordenar pasos (puntaje = pasos bien ubicados)
+   tipo "num"    → respuesta numérica (1 punto al primer intento, 0,5 al segundo)
+   tipo "elegir" → opción múltiple (1 punto al primer intento, 0,5 al segundo) */
+const EX = [
+  { id: "p1", esp: "p", tipo: "orden", t: "Ordená el algoritmo",
+    q: "Ordená los pasos para encontrar el número más grande de una lista. Tocá los pasos en el orden correcto.",
+    pasos: [
+      "Guardar el primer número como “mayor”",
+      "Recorrer los números restantes uno por uno",
+      "Si el número actual es más grande que “mayor”, reemplazar “mayor”",
+      "Al terminar el recorrido, mostrar “mayor”"
+    ] },
+  { id: "e1", esp: "e", tipo: "num", t: "Ley de Ohm",
+    q: "Una batería de 12 V alimenta dos resistencias en serie: R1 = 100 Ω y R2 = 200 Ω. ¿Cuántos mA circulan por el circuito?",
+    resp: 40, tol: 0.5, unidad: "mA",
+    pista: "Sumá las resistencias en serie y aplicá I = V / R. Recordá que 1 A = 1000 mA." },
+  { id: "a1", esp: "a", tipo: "orden", t: "Cambio de rueda",
+    q: "Ordená los pasos para cambiar una rueda pinchada. Tocá los pasos en el orden correcto.",
+    pasos: [
+      "Aflojar un poco las tuercas con la rueda todavía apoyada en el suelo",
+      "Levantar el auto con el gato",
+      "Sacar las tuercas y la rueda pinchada",
+      "Colocar la rueda de auxilio y ajustar las tuercas a mano",
+      "Bajar el auto y dar el ajuste final en cruz"
+    ] },
+  { id: "p2", esp: "p", tipo: "num", t: "Seguí el código",
+    q: "Leé este programa. ¿Qué valor muestra al terminar?",
+    codigo: "total = 0\npara n desde 1 hasta 4:\n    total = total + n * 2\nmostrar total",
+    resp: 20, tol: 0, unidad: "",
+    pista: "Probalo a mano: con n = 1 suma 2, con n = 2 suma 4, y así sucesivamente." },
+  { id: "e2", esp: "e", tipo: "elegir", t: "Resistencia para un LED",
+    q: "Un LED (2 V, 20 mA) se alimenta con una fuente de 5 V. ¿Qué resistencia en serie conviene usar?",
+    op: ["75 Ω", "150 Ω", "300 Ω", "1000 Ω"], ok: 1,
+    pista: "La resistencia debe absorber la diferencia de tensión: R = (5 V − 2 V) / 0,02 A." },
+  { id: "a2", esp: "a", tipo: "num", t: "Relación de transmisión",
+    q: "Un engranaje motriz de 20 dientes mueve a uno de 60 dientes. Si el motriz gira a 3000 rpm, ¿a cuántas rpm gira el engranaje grande?",
+    resp: 1000, tol: 1, unidad: "rpm",
+    pista: "rpm del grande = rpm del motriz × dientes del motriz / dientes del grande." }
+];
+
+const N = Q.length;
+const sc = { p: 0, e: 0, a: 0 };
+let i = 0;          // pregunta actual
+let ejI = 0;        // ejercicio actual
+let ejRes = [];     // resultados de ejercicios
+let user = null;    // { nombre, curso }
+
+const box = document.getElementById("box");
+const st = document.getElementById("stats");
+const who = document.getElementById("who");
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+/* ===== Modo claro / oscuro ===== */
+const themeBtn = document.getElementById("theme");
+const efectivo = () => document.documentElement.dataset.theme || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+function pintarTema() { themeBtn.textContent = efectivo() === "dark" ? "☀️ Modo claro" : "🌙 Modo oscuro"; }
+try { const t = localStorage.getItem("ipet57_tema"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+themeBtn.onclick = () => {
+  const n = efectivo() === "dark" ? "light" : "dark";
+  document.documentElement.dataset.theme = n;
+  try { localStorage.setItem("ipet57_tema", n); } catch (e) {}
+  pintarTema();
+};
+pintarTema();
+
+/* ===== Barras de afinidad ===== */
+Object.keys(SP).forEach(k => {
+  st.insertAdjacentHTML("beforeend", `
+    <div class="row">
+      <div class="lab"><span>${SP[k].n}</span><b id="v${k}">0%</b></div>
+      <div class="track"><div class="fill" id="f${k}" style="background:${SP[k].c}"></div></div>
+    </div>
+  `);
+});
+st.insertAdjacentHTML("beforeend", `<p class="nota">Combina ${Math.round(CONFIG.PESO_TEST * 100)}% tus respuestas del test y ${Math.round(CONFIG.PESO_PRACTICA * 100)}% cómo resolviste los ejercicios prácticos.</p>`);
+
+function calcular() {
+  const R = {};
+  for (const k in SP) {
+    const q = sc[k] / N;
+    const ex = ejRes.filter(r => r.esp === k);
+    const p = ex.length ? ex.reduce((s, r) => s + r.pts, 0) / ex.length : 0;
+    R[k] = { q, p, total: CONFIG.PESO_TEST * q + CONFIG.PESO_PRACTICA * p };
+  }
+  return R;
+}
+const ganador = R => Object.keys(R).sort((a, b) => (R[b].total - R[a].total) || (R[b].q - R[a].q))[0];
+function bars(R) {
+  for (const k in R) {
+    const w = Math.round(R[k].total * 100);
+    document.getElementById("f" + k).style.width = w + "%";
+    document.getElementById("v" + k).textContent = w + "%";
+  }
+}
+
+/* ===== 1) Inicio de sesión ===== */
+function login() {
+  user = null;
+  st.hidden = true;
+  who.hidden = true;
+  box.innerHTML = `
+    <div class="login">
+      <h2>Iniciá sesión</h2>
+      <p class="sub">Ingresá tus datos para empezar el test.</p>
+      <form id="lf" novalidate>
+        <label class="field"><span>Nombre y apellido</span>
+          <input id="ln" type="text" autocomplete="name" maxlength="60" placeholder="Ej: Sofía Pérez"></label>
+        <label class="field"><span>Curso y división (opcional)</span>
+          <input id="lc" type="text" maxlength="20" placeholder="Ej: 3° 2ª"></label>
+        <div class="err" id="lerr" role="alert"></div>
+        <button class="btn big" type="submit">Ingresar</button>
+      </form>
+    </div>
+  `;
+  document.getElementById("lf").onsubmit = ev => {
+    ev.preventDefault();
+    const nombre = document.getElementById("ln").value.trim();
+    const curso = document.getElementById("lc").value.trim();
+    const err = document.getElementById("lerr");
+    if (nombre.length < 2) { err.textContent = "Escribí tu nombre y apellido."; return; }
+    user = { nombre, curso };
+    document.getElementById("whoname").textContent = nombre;
+    who.hidden = false;
+    reiniciar();
+  };
+}
+document.getElementById("logout").onclick = login;
+
+function reiniciar() {
+  sc.p = sc.e = sc.a = 0;
+  i = 0; ejI = 0; ejRes = [];
+  home();
+}
+
+/* ===== 2) Inicio del test ===== */
+function home() {
+  st.hidden = true;
+  box.innerHTML = `
+    <div class="home">
+      <p>Hola, <b>${esc(user.nombre.split(" ")[0])}</b>. Estás transitando 3er año y en 4to vas a elegir tu orientación técnica. El test tiene dos partes: <b>20 preguntas vocacionales</b> y <b>6 ejercicios prácticos</b> donde se evalúa cómo resolvés los problemas. Al final descubrís qué se alinea mejor con vos: Programación, Electrónica o Automotor.</p>
+      <button class="btn big" id="go">Iniciar test orientativo</button>
+      <div class="slots">
+        <div class="contenedor img-inicio-1"></div>
+        <div class="contenedor img-inicio-2"></div>
+        <div class="contenedor img-inicio-3"></div>
+      </div>
+    </div>
+  `;
+  document.getElementById("go").onclick = () => { show(); };
+}
+
+/* ===== 3) Preguntas vocacionales ===== */
+function show() {
+  if (i >= N) return ejIntro();
+  const [q, o] = Q[i];
+  const ks = Object.keys(o).sort(() => Math.random() - .5);
+  box.innerHTML = `
+    <div class="count">Parte 1 · Pregunta ${i + 1} de ${N}</div>
+    <div class="prog"><i style="width:${(i / N) * 100}%"></i></div>
+    <p class="q">${q}</p>
+  `;
+  ks.forEach(k => {
+    const b = document.createElement("button");
+    b.className = "opt";
+    b.textContent = o[k];
+    b.onclick = () => {
+      sc[k]++;
+      i++;
+      show();
+    };
+    box.appendChild(b);
+  });
+}
+
+/* ===== 4) Ejercicios prácticos ===== */
+function ejIntro() {
+  box.innerHTML = `
+    <div class="home">
+      <div class="prog"><i style="width:100%"></i></div>
+      <p class="q">Parte 2 · Ejercicios prácticos</p>
+      <p>Terminaste las preguntas. Ahora vienen ${EX.length} ejercicios cortos, dos de cada especialidad. Se evalúa si acertás, en cuántos intentos y cuánto tardás. Si te equivocás, tenés una pista y un segundo intento.</p>
+      <button class="btn big" id="goex">Empezar ejercicios</button>
+    </div>
+  `;
+  document.getElementById("goex").onclick = showEx;
+}
+
+function showEx() {
+  if (ejI >= EX.length) return end();
+  const e = EX[ejI], s = SP[e.esp], t0 = Date.now();
+  let intentos = 0, hecho = false;
+
+  box.innerHTML = `
+    <div class="count">Parte 2 · Ejercicio ${ejI + 1} de ${EX.length}</div>
+    <div class="prog"><i style="width:${(ejI / EX.length) * 100}%"></i></div>
+    <span class="tag" style="background:${s.c}">${s.em} ${esc(e.t)}</span>
+    <p class="q">${esc(e.q)}</p>
+    ${e.codigo ? `<pre class="code">${esc(e.codigo)}</pre>` : ""}
+    <div id="exb"></div>
+    <div class="fb" id="fb" aria-live="polite"></div>
+    <div class="acts" id="exn"></div>
+  `;
+  const exb = document.getElementById("exb");
+  const fb = document.getElementById("fb");
+  const exn = document.getElementById("exn");
+  const msg = (html, cls) => { fb.className = "fb " + (cls || ""); fb.innerHTML = html; };
+  const fin = (pts, detalle) => {
+    if (hecho) return;
+    hecho = true;
+    ejRes.push({ id: e.id, esp: e.esp, t: e.t, pts, intentos, seg: Math.max(1, Math.round((Date.now() - t0) / 1000)), detalle });
+    const b = document.createElement("button");
+    b.className = "btn";
+    b.textContent = ejI + 1 >= EX.length ? "Ver mi resultado" : "Siguiente ejercicio";
+    b.onclick = () => { ejI++; showEx(); };
+    exn.appendChild(b);
+    b.focus();
+  };
+
+  if (e.tipo === "orden") {
+    const n = e.pasos.length;
+    const pool = e.pasos.map((_, k) => k).sort(() => Math.random() - .5);
+    let sel = [];
+    const comprobar = () => {
+      intentos = 1;
+      const ok = sel.filter((k, p) => k === p).length;
+      exb.innerHTML = `<ol class="mine">${sel.map((k, p) => `<li class="${k === p ? "good" : "badp"}">${esc(e.pasos[k])} ${k === p ? "✓" : "✗"}</li>`).join("")}</ol>`;
+      msg(`Acertaste ${ok} de ${n} pasos en su lugar.` + (ok < n ? `<br>Orden correcto:<ol>${e.pasos.map(x => `<li>${esc(x)}</li>`).join("")}</ol>` : " ¡Excelente!"), ok === n ? "ok" : ok >= n / 2 ? "mid" : "bad");
+      fin(ok / n, `${ok}/${n} pasos en su lugar`);
+    };
+    const draw = () => {
+      const libres = pool.filter(k => !sel.includes(k));
+      exb.innerHTML = `
+        <div class="lab2">Pasos disponibles</div>
+        <div class="pool">${libres.map(k => `<button type="button" class="step" data-k="${k}">${esc(e.pasos[k])}</button>`).join("") || '<span class="muted">Ya usaste todos los pasos.</span>'}</div>
+        <div class="lab2">Tu orden</div>
+        <ol class="mine">${sel.length ? sel.map(k => `<li>${esc(e.pasos[k])}</li>`).join("") : '<li class="empty">Tocá los pasos en el orden correcto…</li>'}</ol>
+        <div class="acts">
+          <button type="button" class="btn ghost" id="und" ${sel.length ? "" : "disabled"}>Deshacer</button>
+          <button type="button" class="btn" id="chk" ${sel.length === n ? "" : "disabled"}>Comprobar</button>
+        </div>`;
+      exb.querySelectorAll(".step").forEach(b => b.onclick = () => { sel.push(+b.dataset.k); draw(); });
+      exb.querySelector("#und").onclick = () => { sel.pop(); draw(); };
+      exb.querySelector("#chk").onclick = comprobar;
+    };
+    draw();
+
+  } else if (e.tipo === "num") {
+    exb.innerHTML = `
+      <div class="numrow">
+        <input id="ans" type="text" inputmode="decimal" autocomplete="off" placeholder="Tu respuesta" aria-label="Tu respuesta">
+        ${e.unidad ? `<span class="unit">${esc(e.unidad)}</span>` : ""}
+        <button type="button" class="btn" id="chk">Comprobar</button>
+      </div>`;
+    const ans = exb.querySelector("#ans"), chk = exb.querySelector("#chk");
+    const go = () => {
+      if (hecho) return;
+      const v = parseFloat(ans.value.replace(",", "."));
+      if (isNaN(v)) { msg("Escribí un número para comprobar.", "mid"); return; }
+      intentos++;
+      if (Math.abs(v - e.resp) <= e.tol) {
+        ans.disabled = chk.disabled = true;
+        msg(intentos === 1 ? "¡Correcto, a la primera!" : "¡Correcto! Lo lograste en el segundo intento.", "ok");
+        fin(intentos === 1 ? 1 : .5, `respuesta ${v}`);
+      } else if (intentos === 1) {
+        msg(`Todavía no. Pista: ${esc(e.pista)} Probá de nuevo.`, "bad");
+        ans.select();
+      } else {
+        ans.disabled = chk.disabled = true;
+        msg(`No era esa. La respuesta correcta es ${e.resp} ${esc(e.unidad || "")}. Pista: ${esc(e.pista)}`, "bad");
+        fin(0, `respuesta ${v}`);
+      }
+    };
+    chk.onclick = go;
+    ans.addEventListener("keydown", ev => { if (ev.key === "Enter") go(); });
+
+  } else { /* elegir */
+    exb.innerHTML = e.op.map((t, k) => `<button type="button" class="opt" data-k="${k}">${esc(t)}</button>`).join("");
+    const btns = [...exb.querySelectorAll(".opt")];
+    btns.forEach(b => b.onclick = () => {
+      if (hecho) return;
+      const k = +b.dataset.k;
+      intentos++;
+      if (k === e.ok) {
+        btns.forEach(x => x.disabled = true);
+        b.classList.add("right");
+        msg(intentos === 1 ? "¡Correcto, a la primera!" : "¡Correcto! Lo lograste en el segundo intento.", "ok");
+        fin(intentos === 1 ? 1 : .5, e.op[k]);
+      } else if (intentos === 1) {
+        b.disabled = true;
+        b.classList.add("wrong");
+        msg(`No es esa. Pista: ${esc(e.pista)} Probá con otra.`, "bad");
+      } else {
+        btns.forEach(x => x.disabled = true);
+        b.classList.add("wrong");
+        btns[e.ok].classList.add("right");
+        msg(`No era esa. La correcta es ${esc(e.op[e.ok])}. ${esc(e.pista)}`, "bad");
+        fin(0, e.op[k]);
+      }
+    });
+  }
+}
+
+/* ===== 5) Resultado ===== */
+function end() {
+  const R = calcular();
+  const w = ganador(R);
+  const s = SP[w];
+  bars(R);
+  st.hidden = false;
+  const li = a => a.map(x => `<li>${x}</li>`).join("");
+  const exHTML = ejRes.map(r => {
+    const ic = r.pts >= 1 ? "✅" : r.pts > 0 ? "🟡" : "❌";
+    return `<li><span>${ic} ${esc(r.t)}</span><small>${Math.round(r.pts * 100)}% · ${r.intentos} intento${r.intentos > 1 ? "s" : ""} · ${r.seg} s</small></li>`;
+  }).join("");
+
+  box.innerHTML = `
+    <div class="res">
+      <div class="hero" style="background:${s.g}">
+        <div class="em">${s.em}</div>
+        <h2>${s.n}</h2>
+        <p>${s.lema}</p>
+      </div>
+      <span class="tag" style="background:${s.c}">Especialidad sugerida para ${esc(user.nombre.split(" ")[0])}</span>
+      <p>${s.d}</p>
+      <h3>Qué vas a aprender</h3><ul>${li(s.ap)}</ul>
+      <h3>Salidas laborales</h3><ul>${li(s.sal)}</ul>
+      <h3>Cómo resolviste los ejercicios</h3><ul class="ejlist">${exHTML}</ul>
+      <div class="pics">
+        <div class="contenedor img-${w}-1"></div>
+        <div class="contenedor img-${w}-2"></div>
+      </div>
+      ${s.frase ? `<blockquote class="frase" style="border-color:${s.c}">“${s.frase[0]}”<cite>—${s.frase[1]}</cite></blockquote>` : ""}
+      <p class="sub">Revisá las barras estadísticas de abajo para analizar tus afinidades generales. Te recomendamos charlar el resultado con tus profesores y familia.</p>
+      <button class="btn" id="re">Volver al inicio</button>
+    </div>
+    <h3><a href="julianrafaelmeza17@gmail.com">CONTACTANOS :D *risita*</a></h3>
+  `;
+  document.getElementById("re").onclick = reiniciar;
+}
+
+login();
+</script>
+</body>
+</html>
