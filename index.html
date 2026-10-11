@@ -482,7 +482,7 @@ h1 {
 const CONFIG = {
   PESO_TEST: 0.7,        // cuánto pesan las preguntas en el resultado
   PESO_PRACTICA: 0.3,    // cuánto pesan los mini desafíos
-  DESAFIO_CADA: 5,       // aparece un mini desafío cada tantas preguntas
+  DESAFIO_CADA: 10,      // aparece un mini desafío cada tantas preguntas (60 preguntas → 6 desafíos)
   AVISO_NEUTRO: 12       // si elegís tantas opciones "D" o más, aparece un aviso de perfil no técnico
 };
 
@@ -536,10 +536,10 @@ const PTS = {
 };
 const PTS_MAX = 18; // máximo de puntos que una sola pregunta puede dar a una especialidad
 
-/* ===== 30 PREGUNTAS =====
+/* ===== 30 PREGUNTAS (con título y 4 opciones) =====
    [tema, pregunta, { A, B, C, D }]
    (el orden de las opciones se mezcla solo al mostrarlas) */
-const Q = [
+const Q_NEW = [
   ["Trabajo en equipo", "Cuando hacés un trabajo en grupo para la escuela o facultad, ¿cuál es tu fuerte?", {
     A: "Organizar cómo se va a hacer la entrega, pensar las reglas y unir las partes que hicieron los demás.",
     B: "Armar la maqueta, pegar las piezas o encargarme del material que se toca y se ve.",
@@ -721,6 +721,168 @@ const Q = [
     D: "Taller de diseño gráfico, oratoria y marketing digital."
   }]
 ];
+
+/* ===== 30 PREGUNTAS RÁPIDAS (versión anterior, de 3 opciones) =====
+   Se adaptan al mismo sistema de puntaje:
+   programación → A · automotor → B · electrónica → C */
+const Q_OLD = [
+  ["Se te rompe algo en tu casa y nadie sabe arreglarlo. ¿Qué hacés?", {
+    p: "Busco información y pienso el problema paso a paso antes de tocar nada.",
+    e: "Fijo si le llega corriente o si hay algún cable flojo.",
+    a: "Lo abro y busco qué pieza está gastada o rota."
+  }],
+  ["Es sábado y no tenés nada que hacer. ¿Qué plan te copa más?", {
+    p: "Armar mi propio juego o una página web.",
+    e: "Armar algo con luces, pilas y cables.",
+    a: "Arreglar una bici o una moto."
+  }],
+  ["¿Qué video mirarías hasta el final?", {
+    p: "Cómo se crean los videojuegos por dentro.",
+    e: "Cómo funcionan los robots y los drones.",
+    a: "Cómo se restaura un auto viejo."
+  }],
+  ["En un trabajo grupal, ¿qué parte te sale mejor?", {
+    p: "Ordenar las ideas para que todo tenga sentido.",
+    e: "Hacer que todas las partes funcionen conectadas entre sí.",
+    a: "Armar y construir lo que se ve, como la maqueta."
+  }],
+  ["Te regalan plata para gastar en lo que quieras. ¿Qué elegís?", {
+    p: "Una buena compu para jugar y crear cosas.",
+    e: "Un kit para armar un robot con luces y sensores.",
+    a: "Un set de herramientas completo."
+  }],
+  ["¿Qué clase se te pasa más rápido?", {
+    p: "Matemática, cuando hay que resolver acertijos.",
+    e: "Física, cuando vemos electricidad e imanes.",
+    a: "Taller, cuando se usan herramientas y máquinas."
+  }],
+  ["De golpe, un aparato deja de funcionar. ¿Qué pensás primero?", {
+    p: "Se habrá colgado o tiene un error. ¿Lo reinicio?",
+    e: "Se habrá cortado la luz o se quemó algo adentro.",
+    a: "Se habrá trabado o recalentado alguna pieza."
+  }],
+  ["¿Qué logro te daría más orgullo?", {
+    p: "Que un programa que hice funcione al primer intento.",
+    e: "Que se prenda algo que armé con cables y componentes.",
+    a: "Que arranque un motor que estaba parado."
+  }],
+  ["Si tuvieras un superpoder, ¿cuál elegirías?", {
+    p: "Entender cualquier programa con solo mirarlo.",
+    e: "Saber cómo funciona cualquier aparato eléctrico.",
+    a: "Saber qué le pasa a un motor con solo escucharlo."
+  }],
+  ["Vas a una feria de tecnología. ¿A qué stand vas primero?", {
+    p: "El de videojuegos y aplicaciones nuevas.",
+    e: "El de robots, drones y luces.",
+    a: "El de autos y motos modernos."
+  }],
+  ["En una peli futurista, ¿qué te llama más la atención?", {
+    p: "La inteligencia artificial que piensa sola.",
+    e: "Los robots y los paneles llenos de luces.",
+    a: "Los autos y las naves que van a toda velocidad."
+  }],
+  ["¿Cómo aprendés mejor?", {
+    p: "Haciendo esquemas y resolviendo ejercicios.",
+    e: "Mirando dibujos y diagramas, y probando con ejemplos reales.",
+    a: "Haciendo las cosas con las manos, tocando y probando."
+  }],
+  ["¿Qué herramienta te gustaría saber usar bien?", {
+    p: "Un programa para crear apps o juegos.",
+    e: "Un tester para medir la electricidad.",
+    a: "Llaves y herramientas de taller."
+  }],
+  ["¿Qué te gustaría explicarle a un amigo?", {
+    p: "Cómo hace una app para saber qué videos te van a gustar.",
+    e: "Cómo hace un control remoto para cambiar de canal.",
+    a: "Cómo hace un auto para avanzar cuando apretás el acelerador."
+  }],
+  ["Estás aburrido en casa y sin celular. ¿Qué hacés?", {
+    p: "Invento acertijos o dibujo ideas para un juego.",
+    e: "Desarmo un cargador o un control viejo para ver cómo es por dentro.",
+    a: "Busco qué le puedo ajustar o arreglar a la bici o a lo que haya."
+  }],
+  ["¿Qué tipo de desafío disfrutás más?", {
+    p: "Los acertijos y los juegos de lógica.",
+    e: "Los que hay que conectar bien para que algo se prenda.",
+    a: "Los que hay que armar o desarmar con herramientas."
+  }],
+  ["¿Qué te gusta de los videojuegos?", {
+    p: "Cómo están hechas las reglas y los niveles.",
+    e: "Los controles, las luces y los aparatos con los que se juega.",
+    a: "Los juegos de carreras y la sensación de velocidad."
+  }],
+  ["Se rompe el ventilador en pleno verano. ¿Qué hacés?", {
+    p: "Busco en internet qué le puede pasar según lo que hace.",
+    e: "Lo desenchufo y reviso el cable y el interruptor.",
+    a: "Miro si las aspas o el motor están trabados."
+  }],
+  ["Te cuentan de un auto eléctrico. ¿Qué te da más curiosidad?", {
+    p: "La pantalla y las funciones inteligentes.",
+    e: "La batería y cómo se carga.",
+    a: "Cómo hace el motor para mover las ruedas."
+  }],
+  ["Visitás una fábrica con la escuela. ¿Qué mirarías más?", {
+    p: "Las computadoras que controlan todo.",
+    e: "Los tableros con cables, luces y botones.",
+    a: "Las máquinas grandes y las piezas que se mueven."
+  }],
+  ["Si pudieras inventar algo, ¿qué sería?", {
+    p: "Una app que te ayude a organizar el día.",
+    e: "Un aparato que prenda las luces cuando entrás a una habitación.",
+    a: "Un vehículo que gaste muy poco combustible."
+  }],
+  ["¿Qué se te da mejor?", {
+    p: "Encontrar el error en una cuenta o en un razonamiento.",
+    e: "Seguir un dibujo o esquema para conectar cosas.",
+    a: "Armar un mueble o un juguete con el manual y las piezas."
+  }],
+  ["¿Con qué te sentís más cómodo?", {
+    p: "Con la compu y el teclado.",
+    e: "Con un soldador y cables chiquitos.",
+    a: "Con herramientas grandes y piezas pesadas."
+  }],
+  ["Alguien te muestra una tecnología nueva. ¿Qué preguntás?", {
+    p: "¿Qué instrucciones sigue para hacer eso?",
+    e: "¿Con qué componentes y con qué energía funciona?",
+    a: "¿Qué piezas se mueven y cuánta fuerza tiene?"
+  }],
+  ["¿Qué te gustaría aprender antes de terminar el colegio?", {
+    p: "A programar mi propia aplicación.",
+    e: "A armar un circuito que haga algo útil.",
+    a: "A cambiar el aceite y las ruedas de un auto."
+  }],
+  ["Tenés que elegir un proyecto para la feria de ciencias. ¿Cuál hacés?", {
+    p: "Un juego o una app para estudiar.",
+    e: "Una alarma con luces y sonido.",
+    a: "Un autito a escala que se mueva solo."
+  }],
+  ["¿Qué es lo que más te frustra?", {
+    p: "Que algo no funcione y no encontrar dónde está el error.",
+    e: "Que algo no prenda y no saber por qué.",
+    a: "Que algo se trabe y no poder moverlo ni aflojarlo."
+  }],
+  ["Te dan un taller propio. ¿Qué ponés primero?", {
+    p: "Computadoras y pantallas.",
+    e: "Una mesa con instrumentos y cajitas con componentes.",
+    a: "Un banco con herramientas y un elevador para autos."
+  }],
+  ["¿Qué trabajo te suena más entretenido para el futuro?", {
+    p: "Crear apps, juegos o páginas web.",
+    e: "Instalar y arreglar equipos eléctricos y electrónicos.",
+    a: "Revisar y reparar autos y motos."
+  }],
+  ["Al terminar el colegio, ¿cómo te gustaría que te recuerden?", {
+    p: "Como quien hacía programas y juegos geniales.",
+    e: "Como quien arreglaba cualquier cosa eléctrica.",
+    a: "Como quien dejaba andando cualquier motor."
+  }]
+];
+const A_NUEVO = { p: "A", a: "B", e: "C" };
+const Q_OLD_N = Q_OLD.map(([q, o]) => ["", q, { [A_NUEVO.p]: o.p, [A_NUEVO.a]: o.a, [A_NUEVO.e]: o.e }]);
+
+/* ===== LAS 60 PREGUNTAS: se intercalan una nueva y una rápida ===== */
+const Q = [];
+for (let i = 0; i < Q_NEW.length; i++) Q.push(Q_NEW[i], Q_OLD_N[i]);
 
 /* ===== 6 MINI DESAFÍOS (se mezclan con las preguntas) =====
    Se juzga si acierta, en cuántos intentos y cuánto tarda.
@@ -922,7 +1084,7 @@ function home() {
       <div class="datos">
         <div class="dato"><b>${N}</b><span>preguntas</span></div>
         <div class="dato"><b>${EX.length}</b><span>mini desafíos</span></div>
-        <div class="dato"><b>~10</b><span>minutos</span></div>
+        <div class="dato"><b>~20</b><span>minutos</span></div>
       </div>
       <p class="muted">Los mini desafíos van apareciendo en el medio de las preguntas. Son cortitos y tenés una pista si te trabás. Si te equivocás al tocar una respuesta, podés volver a la pregunta anterior.</p>
       <button class="btn big" id="go">Iniciar test orientativo</button>
@@ -977,7 +1139,7 @@ function showQ(k) {
     <div class="paso">
       <div class="count">Pregunta ${k + 1} de ${N}</div>
       ${prog()}
-      <span class="tema">${esc(tema)}</span>
+      ${tema ? `<span class="tema">${esc(tema)}</span>` : ""}
       <p class="q">${esc(q)}</p>
       <div id="ops"></div>
       ${btnAtras()}
