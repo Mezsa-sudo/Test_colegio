@@ -4,11 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>¿Qué especialidad elegir? – IPET 57</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
   /* ===== MODO CLARO (tonos púrpura suaves) ===== */
   --bg: #f6f2ff;
-  --card: rgba(255, 255, 255, 0.93);
+  --card: rgba(255, 255, 255, 0.94);
   --text: #2a2340;
   --muted: #6f6690;
   --line: #e3dbfa;
@@ -25,10 +28,11 @@
   --bad: #b91c1c;
   --bad-bg: #fdeaea;
   --shadow: 0 10px 34px rgba(124, 92, 240, 0.13);
-  /* ==== IMAGEN DE FONDO GENERAL ====
-     Remplaza la URL o usa Data URI */
+  /* ==== IMAGEN DE FONDO GENERAL ==== */
   --bg-image: url('img/fondo_colegio.jpg');
   --overlay: rgba(246, 242, 255, 0.9);
+  --font-titulo: "Baloo 2", ui-rounded, "SF Pro Rounded", system-ui, sans-serif;
+  --font-texto: "Nunito", ui-rounded, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   box-sizing: border-box;
   padding-top: env(safe-area-inset-top, 0px);
   padding-bottom: env(safe-area-inset-bottom, 0px);
@@ -84,7 +88,6 @@ html { scroll-padding-top: env(safe-area-inset-top, 0px); }
 body {
   margin: 0;
   background-color: var(--bg);
-  /* resplandor púrpura + overlay legible + imagen de fondo */
   background-image:
     radial-gradient(900px 420px at 8% -8%, rgba(167, 139, 250, 0.32), transparent 70%),
     radial-gradient(700px 380px at 100% 0%, rgba(196, 164, 255, 0.22), transparent 70%),
@@ -94,34 +97,35 @@ body {
   background-position: center;
   background-attachment: fixed;
   color: var(--text);
-  font-family: ui-rounded, "SF Pro Rounded", "Nunito", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--font-texto);
   line-height: 1.5;
 }
 
-main { max-width: 680px; margin: 0 auto; padding: 22px 16px 36px; }
+.wrap { max-width: 960px; margin: 0 auto; padding: 22px 16px 36px; }
 
 /* ===== Encabezado ===== */
-.top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+.top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
 h1 {
-  font-size: 1.65rem;
-  line-height: 1.15;
+  font-family: var(--font-titulo);
+  font-weight: 800;
+  font-size: 2rem;
+  line-height: 1.1;
   margin: 0 0 4px;
-  letter-spacing: -0.01em;
   background: linear-gradient(90deg, var(--h1-a), var(--h1-b));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 .sub { color: var(--muted); margin: 0 0 18px; }
-.top .sub { margin: 0; font-size: .92rem; }
+.top .sub { margin: 0; font-size: .95rem; }
 .pill {
   flex: none;
   font: inherit;
   font-size: .85rem;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text);
   background: var(--card);
-  border: 1px solid var(--line);
+  border: 1.5px solid var(--line);
   border-radius: 999px;
   padding: 8px 14px;
   cursor: pointer;
@@ -130,107 +134,223 @@ h1 {
 }
 .pill:hover { border-color: var(--accent); }
 .session {
-  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
-  font-size: .88rem; color: var(--muted); margin: 0 0 12px;
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  font-size: .9rem; color: var(--muted); margin: 0 0 14px;
+  background: var(--card); border: 1.5px solid var(--line); border-radius: 999px;
+  padding: 6px 8px 6px 14px; width: fit-content; max-width: 100%;
 }
 .session b { color: var(--text); }
-.link { font: inherit; font-size: .85rem; color: var(--accent); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; }
+.link { font: inherit; font-size: .85rem; font-weight: 700; color: var(--accent); background: none; border: 0; padding: 0 6px; cursor: pointer; text-decoration: underline; }
+
+/* ===== Distribución: mascota al lado + contenido ===== */
+.layout { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 22px; align-items: start; }
+.content { min-width: 0; }
+
+/* ===== MASCOTA (contenedor de imagen, visible en toda la página) =====
+   Poné tu imagen en img/mascota.png. Si querés una imagen distinta
+   para cada momento, cambiá las URLs de las clases .m-login, .m-home,
+   .m-q, .m-ex y .m-fin más abajo. */
+.mascota-col {
+  position: sticky;
+  top: calc(16px + env(safe-area-inset-top, 0px));
+  display: grid;
+  gap: 14px;
+  justify-items: center;
+}
+.mascota {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 30px;
+  background-color: var(--card);
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: 2px solid var(--line);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.m-login { background-image: url('img/mascota.png'); }
+.m-home  { background-image: url('img/mascota.png'); }
+.m-q     { background-image: url('img/mascota.png'); }
+.m-ex    { background-image: url('img/mascota.png'); }
+.m-fin   { background-image: url('img/mascota.png'); }
+
+.mascota .ph {
+  position: absolute; inset: 0;
+  display: none;
+  flex-direction: column; align-items: center; justify-content: center;
+  gap: 4px; text-align: center; padding: 10px;
+  color: var(--muted); font-weight: 700; font-size: .9rem;
+}
+.mascota .ph span { font-size: 2.2rem; line-height: 1; }
+.mascota .ph small { font-weight: 400; font-size: .72rem; }
+.mascota-col.sin-img .mascota { border-style: dashed; }
+.mascota-col.sin-img .ph { display: flex; }
+.mascota.rebota { animation: rebota .45s ease; }
+@keyframes rebota {
+  0% { transform: translateY(0) rotate(0); }
+  35% { transform: translateY(-8px) rotate(-2deg); }
+  70% { transform: translateY(0) rotate(1.5deg); }
+  100% { transform: translateY(0) rotate(0); }
+}
+
+.bubble {
+  position: relative;
+  margin: 0;
+  width: 100%;
+  background: var(--card);
+  border: 1.5px solid var(--line);
+  border-radius: 16px;
+  padding: 10px 12px;
+  font-size: .9rem;
+  font-weight: 600;
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+.bubble::before {
+  content: "";
+  position: absolute;
+  top: -7px; left: 50%; margin-left: -6px;
+  width: 12px; height: 12px;
+  background: var(--card);
+  border-left: 1.5px solid var(--line);
+  border-top: 1.5px solid var(--line);
+  transform: rotate(45deg);
+}
 
 /* ===== Tarjetas ===== */
 .card {
+  position: relative;
   background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: 22px;
-  padding: 22px;
+  border: 1.5px solid var(--line);
+  border-radius: 24px;
+  padding: 26px 24px 24px;
   overflow: hidden;
   box-shadow: var(--shadow);
   backdrop-filter: blur(6px);
 }
+#box::before {
+  content: "";
+  position: absolute; top: 0; left: 0; right: 0; height: 6px;
+  background: linear-gradient(90deg, var(--btn-a), var(--btn-b));
+}
 
-.prog { height: 7px; background: var(--line); border-radius: 7px; overflow: hidden; margin-bottom: 14px; }
-.prog i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--btn-a), var(--btn-b)); transition: width .3s; }
-.count { font-size: .82rem; color: var(--muted); margin-bottom: 6px; }
-.q { font-size: 1.15rem; font-weight: 700; margin: 0 0 14px; line-height: 1.35; }
+.paso { animation: aparece .25s ease; }
+@keyframes aparece { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+.prog { position: relative; height: 10px; background: var(--line); border-radius: 10px; margin: 0 0 20px; }
+.prog i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--btn-a), var(--btn-b)); border-radius: 10px; transition: width .3s; }
+.prog .mk {
+  position: absolute; top: 50%;
+  width: 16px; height: 16px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: var(--card);
+  border: 2.5px solid var(--accent);
+}
+.prog .mk.hecho { background: var(--accent); }
+.count { font-size: .85rem; font-weight: 700; color: var(--muted); margin-bottom: 8px; }
+.q { font-family: var(--font-titulo); font-size: 1.4rem; font-weight: 600; margin: 0 0 18px; line-height: 1.25; }
 
 .opt {
-  display: block; width: 100%; text-align: left;
+  display: flex; align-items: center; gap: 12px;
+  width: 100%; text-align: left;
   font: inherit; color: inherit;
   background: transparent;
   border: 1.5px solid var(--line);
-  border-radius: 14px;
+  border-radius: 16px;
   padding: 12px 14px;
   margin-bottom: 10px;
   cursor: pointer;
-  transition: border-color .15s, background .15s;
+  transition: border-color .15s, background .15s, transform .15s;
 }
-.opt:not(:disabled):hover { border-color: var(--accent); background: var(--accent-soft); }
+.ltr {
+  flex: none;
+  width: 32px; height: 32px;
+  display: grid; place-items: center;
+  border-radius: 10px;
+  font-weight: 800;
+  background: var(--accent-soft);
+  color: var(--accent);
+  transition: background .15s, color .15s;
+}
+.opt:not(:disabled):hover { border-color: var(--accent); background: var(--accent-soft); transform: translateY(-1px); }
+.opt:not(:disabled):hover .ltr { background: var(--accent); color: #fff; }
 .opt:disabled { cursor: default; opacity: .75; }
 .opt.right { border-color: var(--ok); background: var(--ok-bg); opacity: 1; }
 .opt.wrong { border-color: var(--bad); background: var(--bad-bg); opacity: 1; }
 
 .btn {
-  font: inherit; font-weight: 700;
+  font: inherit; font-weight: 800;
   background: linear-gradient(135deg, var(--btn-a), var(--btn-b));
   color: #fff;
-  border: 0; border-radius: 12px;
-  padding: 11px 20px;
+  border: 0; border-radius: 14px;
+  padding: 12px 22px;
   cursor: pointer;
   margin-top: 8px;
   box-shadow: 0 6px 16px rgba(124, 92, 240, 0.28);
   text-decoration: none;
   display: inline-block;
+  transition: transform .15s;
 }
+.btn:not(:disabled):hover { transform: translateY(-1px); }
 .btn:disabled { opacity: .45; cursor: default; box-shadow: none; }
 .btn.ghost { background: transparent; color: var(--accent); border: 1.5px solid var(--line); box-shadow: none; }
 .btn.ghost:not(:disabled):hover { border-color: var(--accent); }
-.big { font-size: 1.08rem; padding: 14px 28px; width: 100%; }
+.big { font-size: 1.08rem; padding: 15px 28px; width: 100%; }
 .acts { display: flex; gap: 10px; flex-wrap: wrap; }
 :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 
 .home p { margin: 0 0 14px; }
+.home h2 { font-family: var(--font-titulo); font-size: 1.6rem; margin: 0 0 8px; line-height: 1.15; }
+.datos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 0 0 16px; }
+.dato { background: var(--accent-soft); border-radius: 16px; padding: 12px 8px; text-align: center; }
+.dato b { display: block; font-family: var(--font-titulo); font-size: 1.7rem; line-height: 1; color: var(--accent); }
+.dato span { font-size: .8rem; color: var(--muted); font-weight: 700; }
 
 /* ===== Inicio de sesión ===== */
-.login h2 { margin: 0 0 4px; font-size: 1.35rem; }
+.login h2 { font-family: var(--font-titulo); margin: 0 0 4px; font-size: 1.6rem; }
 .field { display: block; margin-bottom: 14px; }
-.field span { display: block; font-size: .85rem; font-weight: 600; margin-bottom: 5px; }
+.field span { display: block; font-size: .85rem; font-weight: 700; margin-bottom: 5px; }
 .field input, .numrow input {
   width: 100%;
   font: inherit; color: var(--text);
   background: var(--bg);
   border: 1.5px solid var(--line);
-  border-radius: 12px;
-  padding: 11px 13px;
+  border-radius: 14px;
+  padding: 12px 14px;
 }
 .field input:focus, .numrow input:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px var(--accent-soft); }
 .err { min-height: 1.2em; color: var(--bad); font-size: .88rem; margin: -4px 0 6px; }
 
-/* ===== Ejercicios prácticos ===== */
+/* ===== Mini desafíos ===== */
 .code {
   margin: 0 0 14px; padding: 14px 16px;
   background: var(--bg); border: 1px solid var(--line); border-radius: 14px;
   font-family: ui-monospace, "SF Mono", Consolas, monospace; font-size: .92rem;
   overflow-x: auto; white-space: pre;
 }
-.lab2 { font-size: .85rem; font-weight: 700; color: var(--muted); margin: 10px 0 6px; }
+.lab2 { font-size: .85rem; font-weight: 800; color: var(--muted); margin: 10px 0 6px; }
 .pool { display: grid; gap: 8px; }
 .step {
   font: inherit; color: inherit; text-align: left;
-  background: var(--accent-soft); border: 1.5px solid transparent; border-radius: 12px;
-  padding: 10px 12px; cursor: pointer;
+  background: var(--accent-soft); border: 1.5px solid transparent; border-radius: 14px;
+  padding: 11px 13px; cursor: pointer;
 }
 .step:hover { border-color: var(--accent); }
 .muted { color: var(--muted); font-size: .9rem; }
 .mine { margin: 0; padding-left: 24px; display: grid; gap: 6px; }
-.mine li { padding: 8px 10px; border: 1.5px solid var(--line); border-radius: 10px; }
+.mine li { padding: 9px 11px; border: 1.5px solid var(--line); border-radius: 12px; }
 .mine li.empty { list-style: none; margin-left: -24px; color: var(--muted); border-style: dashed; }
 .mine li.good { border-color: var(--ok); background: var(--ok-bg); }
 .mine li.badp { border-color: var(--bad); background: var(--bad-bg); }
 .numrow { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .numrow input { flex: 1 1 140px; width: auto; }
 .numrow .btn { margin-top: 0; }
-.unit { font-weight: 700; color: var(--muted); }
-.fb { margin-top: 12px; border-radius: 12px; padding: 0; font-size: .95rem; }
-.fb:not(:empty) { padding: 10px 12px; background: var(--accent-soft); }
+.unit { font-weight: 800; color: var(--muted); }
+.fb { margin-top: 12px; border-radius: 14px; padding: 0; font-size: .95rem; }
+.fb:not(:empty) { padding: 11px 13px; background: var(--accent-soft); }
 .fb.ok { background: var(--ok-bg); color: var(--ok); }
 .fb.mid { background: var(--mid-bg); color: var(--mid); }
 .fb.bad { background: var(--bad-bg); color: var(--bad); }
@@ -238,7 +358,7 @@ h1 {
 
 /* ===== IMÁGENES CONTENEDORES ===== */
 .slots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; }
-.contenedor { aspect-ratio: 1/1; border-radius: 16px; background-color: var(--line); background-size: cover; background-position: center; background-repeat: no-repeat; }
+.contenedor { aspect-ratio: 1/1; border-radius: 18px; background-color: var(--line); background-size: cover; background-position: center; background-repeat: no-repeat; }
 
 .img-inicio-1 { background-image: url('img/programa.png'); }
 .img-inicio-2 { background-image: url('img/images.png'); }
@@ -255,19 +375,19 @@ h1 {
 
 /* ===== Barras de estadísticas al final ===== */
 #stats { margin-top: 18px; text-align: center; }
-#stats h3 { font-size: 1rem; margin: 0 0 12px; }
-.row { margin-bottom: 10px; text-align: left; }
-.lab { display: flex; justify-content: space-between; font-size: .85rem; margin-bottom: 3px; }
-.track { height: 12px; background: var(--line); border-radius: 8px; overflow: hidden; }
-.fill { height: 100%; width: 0; border-radius: 8px; transition: width .5s ease; }
+#stats h3 { font-family: var(--font-titulo); font-size: 1.2rem; margin: 0 0 14px; }
+.row { margin-bottom: 12px; text-align: left; }
+.lab { display: flex; justify-content: space-between; font-size: .9rem; font-weight: 700; margin-bottom: 4px; }
+.track { height: 14px; background: var(--line); border-radius: 8px; overflow: hidden; }
+.fill { height: 100%; width: 0; border-radius: 8px; transition: width .6s ease; }
 .nota { font-size: .8rem; color: var(--muted); margin: 12px 0 0; }
 
 /* ===== Vista de resultados ===== */
-.hero { margin: -22px -22px 18px; padding: 30px 20px; color: #fff; text-align: center; }
-.hero .em { font-size: 3rem; line-height: 1; }
-.hero h2 { margin: 8px 0 4px; font-size: 1.6rem; }
-.hero p { margin: 0; opacity: .94; }
-.res h3 { margin: 18px 0 6px; font-size: 1rem; }
+.hero { position: relative; margin: -26px -24px 20px; padding: 34px 20px; color: #fff; text-align: center; }
+.hero .em { font-size: 3.2rem; line-height: 1; }
+.hero h2 { font-family: var(--font-titulo); margin: 8px 0 4px; font-size: 2rem; }
+.hero p { margin: 0; opacity: .95; }
+.res h3 { font-family: var(--font-titulo); margin: 20px 0 6px; font-size: 1.15rem; }
 .res ul { margin: 0; padding-left: 20px; }
 .res li { margin-bottom: 4px; }
 .pics { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 18px 0; }
@@ -275,26 +395,57 @@ h1 {
   margin: 18px 0; padding: 14px 16px;
   border-left: 5px solid;
   background: var(--accent-soft);
-  border-radius: 12px;
+  border-radius: 14px;
   font-size: 1.25rem; font-weight: 800; letter-spacing: .01em;
 }
 .frase cite { display: block; font-size: .85rem; font-weight: 400; color: var(--muted); margin-top: 4px; font-style: normal; }
-.tag { display: inline-block; border-radius: 999px; padding: 4px 13px; font-size: .82rem; font-weight: 700; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,.25); margin-bottom: 8px; }
+.tag { display: inline-block; border-radius: 999px; padding: 4px 13px; font-size: .82rem; font-weight: 800; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,.25); margin-bottom: 10px; }
+.tag.neutro { background: linear-gradient(135deg, var(--btn-a), var(--btn-b)); }
 .res ul.ejlist { list-style: none; padding: 0; display: grid; gap: 6px; }
-.ejlist li { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; padding: 8px 10px; border: 1px solid var(--line); border-radius: 10px; margin: 0; }
+.ejlist li { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; padding: 9px 11px; border: 1px solid var(--line); border-radius: 12px; margin: 0; }
 .ejlist small { color: var(--muted); }
+.contacto { margin-top: 22px; padding-top: 14px; border-top: 1.5px dashed var(--line); text-align: center; }
+.contacto h3 { margin: 0 0 4px; }
+.contacto h4, .contacto h5 { margin: 4px 0; font-weight: 700; }
+.contacto a { color: var(--accent); }
 
 /* ===== Pie de página ===== */
 .foot { margin-top: 26px; text-align: center; font-size: .85rem; color: var(--muted); }
 .foot .j { color: var(--accent); font-weight: 800; }
 
-@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
-@media (max-width: 440px) { h1 { font-size: 1.35rem; } .top { flex-direction: column; } }
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+
+/* ===== Celulares: la mascota pasa arriba, al costado de su globo de texto ===== */
+@media (max-width: 760px) {
+  .layout { grid-template-columns: 1fr; gap: 16px; }
+  .mascota-col {
+    position: static;
+    grid-template-columns: 92px 1fr;
+    align-items: center;
+    justify-items: stretch;
+    gap: 14px;
+  }
+  .mascota { border-radius: 22px; }
+  .bubble { text-align: left; }
+  .bubble::before {
+    top: 50%; left: -7px; margin: -6px 0 0 0;
+    transform: rotate(-45deg);
+  }
+  h1 { font-size: 1.6rem; }
+}
+@media (max-width: 440px) {
+  .card { padding: 22px 16px 20px; }
+  .hero { margin: -22px -16px 18px; }
+  .q { font-size: 1.25rem; }
+  .datos { grid-template-columns: 1fr; }
+}
 </style>
 </head>
 <body>
 
-<main>
+<main class="wrap">
   <header class="top">
     <div>
       <h1>¿Qué especialidad elegir?</h1>
@@ -308,8 +459,20 @@ h1 {
     <button class="link" id="logout" type="button">Cerrar sesión</button>
   </div>
 
-  <div class="card" id="box"></div>
-  <div class="card" id="stats" hidden><h3>Afinidad orientativa obtenida:</h3></div>
+  <div class="layout">
+    <!-- MASCOTA: aparece al costado en todas las pantallas -->
+    <aside class="mascota-col" id="mcol">
+      <div class="mascota m-login" id="mascota" role="img" aria-label="Mascota del test">
+        <div class="ph"><span>🐾</span>Tu mascota va acá<small>img/mascota.png</small></div>
+      </div>
+      <p class="bubble" id="bubble" aria-live="polite"></p>
+    </aside>
+
+    <section class="content">
+      <div class="card" id="box"></div>
+      <div class="card" id="stats" hidden><h3>Afinidad orientativa obtenida:</h3></div>
+    </section>
+  </div>
 
   <footer class="foot">Página/Test hecho por Julian Rafael Meza y la sutil <span class="j">J</span></footer>
 </main>
@@ -317,8 +480,9 @@ h1 {
 <script>
 /* ===== CONFIGURACIÓN ===== */
 const CONFIG = {
-  PESO_TEST: 0.7,       // cuánto pesan las 20 preguntas en el resultado
-  PESO_PRACTICA: 0.3    // cuánto pesan los ejercicios prácticos
+  PESO_TEST: 0.7,        // cuánto pesan las preguntas en el resultado
+  PESO_PRACTICA: 0.3,    // cuánto pesan los mini desafíos
+  DESAFIO_CADA: 5        // aparece un mini desafío cada tantas preguntas
 };
 
 const SP = {
@@ -357,162 +521,254 @@ const SP = {
   }
 };
 
+/* ===== 30 PREGUNTAS =====
+   p = programación · e = electrónica · a = automotor
+   (el orden de las opciones se mezcla solo al mostrarlas) */
 const Q = [
-  ["Cuando enfrentás un problema complejo, ¿qué enfoque te resulta más natural?", {
-    p: "Modelar el proceso paso a paso hasta encontrar una regla que resuelva cualquier caso similar.",
-    e: "Analizar cómo interactúan las partes internas y qué señal o flujo está fallando en el sistema.",
-    a: "Inspeccionar las fuerzas mecánicas o los componentes físicos en acción para ver dónde está el desgaste."
+  ["Se te rompe algo en tu casa y nadie sabe arreglarlo. ¿Qué hacés?", {
+    p: "Busco información y pienso el problema paso a paso antes de tocar nada.",
+    e: "Fijo si le llega corriente o si hay algún cable flojo.",
+    a: "Lo abro y busco qué pieza está gastada o rota."
   }],
-  ["¿Qué tipo de proyectos atraen más tu curiosidad técnica?", {
-    p: "Aquellos donde pueda estructurar información, crear reglas y obtener resultados automatizados.",
-    e: "Los que involucran procesar respuestas del entorno mediante sensores, módulos e indicadores.",
-    a: "Los que implican ensamblar, ajustar transmisiones y optimizar el rendimiento de sistemas mecánicos."
+  ["Es sábado y no tenés nada que hacer. ¿Qué plan te copa más?", {
+    p: "Armar mi propio juego o una página web.",
+    e: "Armar algo con luces, pilas y cables.",
+    a: "Arreglar una bici o una moto."
   }],
-  ["¿Cuál de estos temas te despierta más ganas de profundizar en una clase?", {
-    p: "La lógica matemática detrás del funcionamiento del software actual.",
-    e: "Los principios electromagnéticos que permiten transmitir energía y datos.",
-    a: "Los principios físicos de la termodinámica, la presión y la transmisión de movimiento."
+  ["¿Qué video mirarías hasta el final?", {
+    p: "Cómo se crean los videojuegos por dentro.",
+    e: "Cómo funcionan los robots y los drones.",
+    a: "Cómo se restaura un auto viejo."
   }],
-  ["Al observar un dispositivo avanzado en funcionamiento, te preguntás...", {
-    p: "¿Qué arquitectura de instrucciones ejecuta para procesar todo sin fallas?",
-    e: "¿Qué circuito integrado gestiona los componentes eléctricos en tiempo real?",
-    a: "¿Cómo interactúan los mecanismos internos para soportar la fricción y la fuerza ejercida?"
+  ["En un trabajo grupal, ¿qué parte te sale mejor?", {
+    p: "Ordenar las ideas para que todo tenga sentido.",
+    e: "Hacer que todas las partes funcionen conectadas entre sí.",
+    a: "Armar y construir lo que se ve, como la maqueta."
   }],
-  ["Si tuvieras que solucionar un fallo inesperado, prefieres...", {
-    p: "Rastrear la secuencia de instrucciones para corregir el paso donde la lógica falla.",
-    e: "Usar instrumentos de medición para verificar el comportamiento de cada nodo del sistema.",
-    a: "Desarmar la estructura paso a paso para evaluar el estado y ajuste de los componentes."
+  ["Te regalan plata para gastar en lo que quieras. ¿Qué elegís?", {
+    p: "Una buena compu para jugar y crear cosas.",
+    e: "Un kit para armar un robot con luces y sensores.",
+    a: "Un set de herramientas completo."
   }],
-  ["¿En qué tipo de entorno de taller te sentirías más cómodo pasando horas?", {
-    p: "Un entorno enfocado en la estructuración de ideas, sintaxis y plataformas digitales.",
-    e: "Un mesa de trabajo equipada con instrumental de prueba, soldadores y componentes discretos.",
-    a: "Un taller equipado con bancos de prueba, prensas y herramientas para sistemas de gran escala."
+  ["¿Qué clase se te pasa más rápido?", {
+    p: "Matemática, cuando hay que resolver acertijos.",
+    e: "Física, cuando vemos electricidad e imanes.",
+    a: "Taller, cuando se usan herramientas y máquinas."
   }],
-  ["¿Qué rol tendés a asumir cuando trabajás en equipo para resolver un desafío?", {
-    p: "Quien organiza la estructura lógica y asegura que todo el proceso siga una secuencia coherente.",
-    e: "Quien verifica las conexiones interdependientes y asegura la compatibilidad entre partes.",
-    a: "Quien ejecuta el montaje técnico, asegurando que la estructura física quede firme y funcional."
+  ["De golpe, un aparato deja de funcionar. ¿Qué pensás primero?", {
+    p: "Se habrá colgado o tiene un error. ¿Lo reinicio?",
+    e: "Se habrá cortado la luz o se quemó algo adentro.",
+    a: "Se habrá trabado o recalentado alguna pieza."
   }],
-  ["¿Qué área de las ciencias aplicadas capta más tu atención?", {
-    p: "La matemática discreta y la teoría de la información.",
-    e: "La física electromagnética y la teoría de circuitos.",
-    a: "La física mecánica, la cinemática y la dinámica de fluidos."
+  ["¿Qué logro te daría más orgullo?", {
+    p: "Que un programa que hice funcione al primer intento.",
+    e: "Que se prenda algo que armé con cables y componentes.",
+    a: "Que arranque un motor que estaba parado."
   }],
-  ["¿Con cuál de estos elementos sentirías mayor satisfacción al dominar su uso?", {
-    p: "Un entorno de desarrollo abstracto para crear herramientas escalables.",
-    e: "Un osciloscopio o un multímetro para diagnosticar ondas y variaciones de tensión.",
-    a: "Instrumentos de precisión como calibres y torquímetros para ajustar mecanismos."
+  ["Si tuvieras un superpoder, ¿cuál elegirías?", {
+    p: "Entender cualquier programa con solo mirarlo.",
+    e: "Saber cómo funciona cualquier aparato eléctrico.",
+    a: "Saber qué le pasa a un motor con solo escucharlo."
   }],
-  ["¿Qué logro técnico te genera mayor interés para presentar en una exposición?", {
-    p: "Una plataforma web o software capaz de procesar datos complejos en tiempo real.",
-    e: "Un sistema automatizado de respuesta y control activado por sensores del entorno.",
-    a: "Un prototipo mecánico funcional de transmisión de potencia o transformación energética."
+  ["Vas a una feria de tecnología. ¿A qué stand vas primero?", {
+    p: "El de videojuegos y aplicaciones nuevas.",
+    e: "El de robots, drones y luces.",
+    a: "El de autos y motos modernos."
   }],
-  ["Si tuvieras que explicar cómo funciona algo, te enfocarías en...", {
-    p: "La lógica detrás de la toma de decisiones del sistema.",
-    e: "Las variaciones de energía y las señales que activan cada módulo.",
-    a: "La relación entre la fuerza aplicada y la respuesta física del mecanismo."
+  ["En una peli futurista, ¿qué te llama más la atención?", {
+    p: "La inteligencia artificial que piensa sola.",
+    e: "Los robots y los paneles llenos de luces.",
+    a: "Los autos y las naves que van a toda velocidad."
   }],
-  ["¿Qué tipo de desafíos de ingenio te resulta más motivador?", {
-    p: "Acertijos de lógica pura, algoritmos y patrones conceptuales.",
-    e: "Puzles de flujo de corriente, switches e interpretación de esquemas técnicos.",
-    a: "Desafíos de engranajes, palancas y balance de pesos mecánicos."
+  ["¿Cómo aprendés mejor?", {
+    p: "Haciendo esquemas y resolviendo ejercicios.",
+    e: "Mirando dibujos y diagramas, y probando con ejemplos reales.",
+    a: "Haciendo las cosas con las manos, tocando y probando."
   }],
-  ["¿Qué tipo de documentación técnica te parece más interesante de interpretar?", {
-    p: "Diagramas de flujo de procesos, estructuras de datos y sintaxis de programación.",
-    e: "Esquemas eléctricos, diagramas de bloques y planos de pines de componentes.",
-    a: "Planos despiezados de conjuntos mecánicos, vistas en corte y especificaciones de tolerancia."
+  ["¿Qué herramienta te gustaría saber usar bien?", {
+    p: "Un programa para crear apps o juegos.",
+    e: "Un tester para medir la electricidad.",
+    a: "Llaves y herramientas de taller."
   }],
-  ["Si quisieras mejorar la eficiencia de un sistema, buscarías...", {
-    p: "Optimizar las instrucciones para que el proceso sea más rápido y consuma menos recursos.",
-    e: "Reducir la resistencia, mejorar el filtrado de señales o cambiar el control de potencia.",
-    a: "Disminuir la fricción, mejorar la lubricación y optimizar la relación de transmisión."
+  ["¿Qué te gustaría explicarle a un amigo?", {
+    p: "Cómo hace una app para saber qué videos te van a gustar.",
+    e: "Cómo hace un control remoto para cambiar de canal.",
+    a: "Cómo hace un auto para avanzar cuando apretás el acelerador."
   }],
-  ["Al proyectarte en tu trayectoria técnica profesional, te imaginas...", {
-    p: "Especializándote en soluciones digitales, plataformas en la nube o ciberseguridad.",
-    e: "Diseñando hardware, robótica industrial o placas de control automatizadas.",
-    a: "Dirigiendo diagnósticos electromecánicos avanzados o desarrollo en la industria automotriz."
+  ["Estás aburrido en casa y sin celular. ¿Qué hacés?", {
+    p: "Invento acertijos o dibujo ideas para un juego.",
+    e: "Desarmo un cargador o un control viejo para ver cómo es por dentro.",
+    a: "Busco qué le puedo ajustar o arreglar a la bici o a lo que haya."
   }],
-  ["Frente a una interrupción imprevista de un servicio o máquina, lo primero que analizás es...", {
-    p: "Si se produjo una condición no contemplada en las reglas del sistema.",
-    e: "Si hubo un pico de carga o un fallo en el suministro y los componentes de protección.",
-    a: "Si ocurrió un sobrecalentamiento, ruptura o falla de alineación en partes móviles."
+  ["¿Qué tipo de desafío disfrutás más?", {
+    p: "Los acertijos y los juegos de lógica.",
+    e: "Los que hay que conectar bien para que algo se prenda.",
+    a: "Los que hay que armar o desarmar con herramientas."
   }],
-  ["¿Qué concepto considerás más fascinante?", {
-    p: "La capacidad de representar cualquier aspecto de la realidad mediante código binario.",
-    e: "La capacidad de transformar señales invisibles en movimientos o luz con absoluta precisión.",
-    a: "La capacidad de transformar la energía térmica del combustible en fuerza mecánica pura."
+  ["¿Qué te gusta de los videojuegos?", {
+    p: "Cómo están hechas las reglas y los niveles.",
+    e: "Los controles, las luces y los aparatos con los que se juega.",
+    a: "Los juegos de carreras y la sensación de velocidad."
   }],
-  ["Si te piden construir un dispositivo de seguridad para un espacio, te encargarías de...", {
-    p: "Escribir la lógica de validación de usuarios y alertas del sistema.",
-    e: "Integrar los sensores ópticos, de movimiento y el circuito de disparo del evento.",
-    a: "Diseñar los cierres mecánicos de alta resistencia y los mecanismos de bloqueo."
+  ["Se rompe el ventilador en pleno verano. ¿Qué hacés?", {
+    p: "Busco en internet qué le puede pasar según lo que hace.",
+    e: "Lo desenchufo y reviso el cable y el interruptor.",
+    a: "Miro si las aspas o el motor están trabados."
   }],
-  ["¿En qué tipo de innovación tecnológica te gustaría colaborar en el futuro?", {
-    p: "Modelos de inteligencia artificial o entornos de software complejos.",
-    e: "Sistemas embebidos para tecnología médica, espacial o robótica de precisión.",
-    a: "Sistemas de propulsión eficiente, vehículos eléctricos o mecánica de alta competición."
+  ["Te cuentan de un auto eléctrico. ¿Qué te da más curiosidad?", {
+    p: "La pantalla y las funciones inteligentes.",
+    e: "La batería y cómo se carga.",
+    a: "Cómo hace el motor para mover las ruedas."
   }],
-  ["¿Qué habilidad técnica te gustaría que caracterice tu perfil profesional?", {
-    p: "Capacidad analítica para traducir cualquier requerimiento en una solución de software.",
-    e: "Destreza para diseñar, medir e integrar sistemas electrónicos complejos.",
-    a: "Dominio integral del funcionamiento electromecánico y capacidad de diagnóstico de fallas."
+  ["Visitás una fábrica con la escuela. ¿Qué mirarías más?", {
+    p: "Las computadoras que controlan todo.",
+    e: "Los tableros con cables, luces y botones.",
+    a: "Las máquinas grandes y las piezas que se mueven."
+  }],
+  ["Si pudieras inventar algo, ¿qué sería?", {
+    p: "Una app que te ayude a organizar el día.",
+    e: "Un aparato que prenda las luces cuando entrás a una habitación.",
+    a: "Un vehículo que gaste muy poco combustible."
+  }],
+  ["¿Qué se te da mejor?", {
+    p: "Encontrar el error en una cuenta o en un razonamiento.",
+    e: "Seguir un dibujo o esquema para conectar cosas.",
+    a: "Armar un mueble o un juguete con el manual y las piezas."
+  }],
+  ["¿Con qué te sentís más cómodo?", {
+    p: "Con la compu y el teclado.",
+    e: "Con un soldador y cables chiquitos.",
+    a: "Con herramientas grandes y piezas pesadas."
+  }],
+  ["Alguien te muestra una tecnología nueva. ¿Qué preguntás?", {
+    p: "¿Qué instrucciones sigue para hacer eso?",
+    e: "¿Con qué componentes y con qué energía funciona?",
+    a: "¿Qué piezas se mueven y cuánta fuerza tiene?"
+  }],
+  ["¿Qué te gustaría aprender antes de terminar el colegio?", {
+    p: "A programar mi propia aplicación.",
+    e: "A armar un circuito que haga algo útil.",
+    a: "A cambiar el aceite y las ruedas de un auto."
+  }],
+  ["Tenés que elegir un proyecto para la feria de ciencias. ¿Cuál hacés?", {
+    p: "Un juego o una app para estudiar.",
+    e: "Una alarma con luces y sonido.",
+    a: "Un autito a escala que se mueva solo."
+  }],
+  ["¿Qué es lo que más te frustra?", {
+    p: "Que algo no funcione y no encontrar dónde está el error.",
+    e: "Que algo no prenda y no saber por qué.",
+    a: "Que algo se trabe y no poder moverlo ni aflojarlo."
+  }],
+  ["Te dan un taller propio. ¿Qué ponés primero?", {
+    p: "Computadoras y pantallas.",
+    e: "Una mesa con instrumentos y cajitas con componentes.",
+    a: "Un banco con herramientas y un elevador para autos."
+  }],
+  ["¿Qué trabajo te suena más entretenido para el futuro?", {
+    p: "Crear apps, juegos o páginas web.",
+    e: "Instalar y arreglar equipos eléctricos y electrónicos.",
+    a: "Revisar y reparar autos y motos."
+  }],
+  ["Al terminar el colegio, ¿cómo te gustaría que te recuerden?", {
+    p: "Como quien hacía programas y juegos geniales.",
+    e: "Como quien arreglaba cualquier cosa eléctrica.",
+    a: "Como quien dejaba andando cualquier motor."
   }]
 ];
 
-/* ===== EJERCICIOS PRÁCTICOS =====
-   Se juzga cómo se resuelven: si acierta, a cuántos intentos y cuánto tarda.
+/* ===== 6 MINI DESAFÍOS (se mezclan con las preguntas) =====
+   Se juzga si acierta, en cuántos intentos y cuánto tarda.
    tipo "orden"  → ordenar pasos (puntaje = pasos bien ubicados)
    tipo "num"    → respuesta numérica (1 punto al primer intento, 0,5 al segundo)
    tipo "elegir" → opción múltiple (1 punto al primer intento, 0,5 al segundo) */
 const EX = [
-  { id: "p1", esp: "p", tipo: "orden", t: "Ordená el algoritmo",
-    q: "Ordená los pasos para encontrar el número más grande de una lista. Tocá los pasos en el orden correcto.",
+  { id: "p1", esp: "p", tipo: "orden", t: "Ordená los pasos",
+    q: "Un juego tiene que darte 1 punto cuando agarrás una moneda. Tocá los pasos en el orden correcto.",
     pasos: [
-      "Guardar el primer número como “mayor”",
-      "Recorrer los números restantes uno por uno",
-      "Si el número actual es más grande que “mayor”, reemplazar “mayor”",
-      "Al terminar el recorrido, mostrar “mayor”"
+      "El jugador se mueve",
+      "El juego revisa si tocó la moneda",
+      "Si la tocó, suma 1 punto",
+      "Se muestra el nuevo puntaje"
     ] },
-  { id: "e1", esp: "e", tipo: "num", t: "Ley de Ohm",
-    q: "Una batería de 12 V alimenta dos resistencias en serie: R1 = 100 Ω y R2 = 200 Ω. ¿Cuántos mA circulan por el circuito?",
-    resp: 40, tol: 0.5, unidad: "mA",
-    pista: "Sumá las resistencias en serie y aplicá I = V / R. Recordá que 1 A = 1000 mA." },
-  { id: "a1", esp: "a", tipo: "orden", t: "Cambio de rueda",
-    q: "Ordená los pasos para cambiar una rueda pinchada. Tocá los pasos en el orden correcto.",
+  { id: "e1", esp: "e", tipo: "elegir", t: "La linterna",
+    q: "Tu linterna a pilas no prende. ¿Qué mirarías primero?",
+    op: ["El color de la carcasa", "Cuánto pesa", "Si las pilas están bien puestas y tienen carga", "Si es de una marca conocida"], ok: 2,
+    pista: "Para que algo prenda, primero tiene que llegarle energía." },
+  { id: "a1", esp: "a", tipo: "orden", t: "Cargar nafta",
+    q: "Vas a cargar nafta. Tocá los pasos en el orden correcto.",
     pasos: [
-      "Aflojar un poco las tuercas con la rueda todavía apoyada en el suelo",
-      "Levantar el auto con el gato",
-      "Sacar las tuercas y la rueda pinchada",
-      "Colocar la rueda de auxilio y ajustar las tuercas a mano",
-      "Bajar el auto y dar el ajuste final en cruz"
+      "Apagar el motor",
+      "Abrir la tapa del tanque",
+      "Cargar el combustible",
+      "Cerrar bien la tapa"
     ] },
-  { id: "p2", esp: "p", tipo: "num", t: "Seguí el código",
-    q: "Leé este programa. ¿Qué valor muestra al terminar?",
-    codigo: "total = 0\npara n desde 1 hasta 4:\n    total = total + n * 2\nmostrar total",
-    resp: 20, tol: 0, unidad: "",
-    pista: "Probalo a mano: con n = 1 suma 2, con n = 2 suma 4, y así sucesivamente." },
-  { id: "e2", esp: "e", tipo: "elegir", t: "Resistencia para un LED",
-    q: "Un LED (2 V, 20 mA) se alimenta con una fuente de 5 V. ¿Qué resistencia en serie conviene usar?",
-    op: ["75 Ω", "150 Ω", "300 Ω", "1000 Ω"], ok: 1,
-    pista: "La resistencia debe absorber la diferencia de tensión: R = (5 V − 2 V) / 0,02 A." },
-  { id: "a2", esp: "a", tipo: "num", t: "Relación de transmisión",
-    q: "Un engranaje motriz de 20 dientes mueve a uno de 60 dientes. Si el motriz gira a 3000 rpm, ¿a cuántas rpm gira el engranaje grande?",
-    resp: 1000, tol: 1, unidad: "rpm",
-    pista: "rpm del grande = rpm del motriz × dientes del motriz / dientes del grande." }
+  { id: "p2", esp: "p", tipo: "elegir", t: "Seguí el patrón",
+    q: "Mirá esta secuencia: 2, 4, 8, 16, … ¿Qué número sigue?",
+    op: ["18", "24", "32", "20"], ok: 2,
+    pista: "Fijate cómo pasás del 2 al 4, del 4 al 8… ¿qué se repite?" },
+  { id: "e2", esp: "e", tipo: "num", t: "Pilas en fila",
+    q: "Una pila da 1,5 V. Si ponés 2 pilas iguales una a continuación de la otra, ¿cuántos voltios da el conjunto?",
+    resp: 3, tol: 0, unidad: "V",
+    pista: "Cuando las pilas van una a continuación de la otra, sus voltios se suman." },
+  { id: "a2", esp: "a", tipo: "elegir", t: "Ruido al frenar",
+    q: "Un auto hace un chillido cuando frenás. ¿Qué parte conviene revisar primero?",
+    op: ["La radio", "Los frenos (pastillas y discos)", "Los asientos", "Las luces de adentro"], ok: 1,
+    pista: "Pensá qué parte es la que trabaja justo cuando frenás." }
 ];
 
+/* ===== ARMADO DEL RECORRIDO: preguntas + mini desafíos mezclados ===== */
 const N = Q.length;
+const FLOW = [];
+Q.forEach((_, k) => {
+  FLOW.push({ t: "q", k });
+  const n = (k + 1) / CONFIG.DESAFIO_CADA;
+  if (Number.isInteger(n) && EX[n - 1]) FLOW.push({ t: "ex", k: n - 1 });
+});
+
 const sc = { p: 0, e: 0, a: 0 };
-let i = 0;          // pregunta actual
-let ejI = 0;        // ejercicio actual
-let ejRes = [];     // resultados de ejercicios
+let paso = 0;       // posición actual dentro de FLOW
+let ejRes = [];     // resultados de los mini desafíos
 let user = null;    // { nombre, curso }
 
 const box = document.getElementById("box");
 const st = document.getElementById("stats");
 const who = document.getElementById("who");
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+/* ===== Mascota ===== */
+const mcol = document.getElementById("mcol");
+const mas = document.getElementById("mascota");
+const bub = document.getElementById("bubble");
+let ultimaImg = "";
+function revisarImg() {
+  const m = /url\(["']?([^"')]+)["']?\)/.exec(getComputedStyle(mas).backgroundImage);
+  if (!m) { mcol.classList.add("sin-img"); return; }
+  if (m[1] === ultimaImg) return;
+  ultimaImg = m[1];
+  const im = new Image();
+  im.onload = () => mcol.classList.remove("sin-img");
+  im.onerror = () => mcol.classList.add("sin-img");
+  im.src = m[1];
+}
+function decir(t) {
+  bub.textContent = t;
+  mas.classList.remove("rebota");
+  void mas.offsetWidth;
+  mas.classList.add("rebota");
+}
+function mascota(estado, texto) {
+  mas.className = "mascota m-" + estado;
+  revisarImg();
+  decir(texto);
+}
+const DICE_Q = [
+  "Elegí lo primero que sientas.",
+  "No hay respuestas malas, ¡sos vos!",
+  "No lo pienses tanto 😉",
+  "Respondé con sinceridad.",
+  "Quedate con la que más se parezca a vos."
+];
 
 /* ===== Modo claro / oscuro ===== */
 const themeBtn = document.getElementById("theme");
@@ -531,12 +787,12 @@ pintarTema();
 Object.keys(SP).forEach(k => {
   st.insertAdjacentHTML("beforeend", `
     <div class="row">
-      <div class="lab"><span>${SP[k].n}</span><b id="v${k}">0%</b></div>
+      <div class="lab"><span>${SP[k].em} ${SP[k].n}</span><b id="v${k}">0%</b></div>
       <div class="track"><div class="fill" id="f${k}" style="background:${SP[k].c}"></div></div>
     </div>
   `);
 });
-st.insertAdjacentHTML("beforeend", `<p class="nota">Combina ${Math.round(CONFIG.PESO_TEST * 100)}% tus respuestas del test y ${Math.round(CONFIG.PESO_PRACTICA * 100)}% cómo resolviste los ejercicios prácticos.</p>`);
+st.insertAdjacentHTML("beforeend", `<p class="nota">Combina ${Math.round(CONFIG.PESO_TEST * 100)}% tus respuestas del test y ${Math.round(CONFIG.PESO_PRACTICA * 100)}% cómo resolviste los mini desafíos.</p>`);
 
 function calcular() {
   const R = {};
@@ -557,13 +813,22 @@ function bars(R) {
   }
 }
 
+/* ===== Barra de progreso con marcas de mini desafío ===== */
+function prog() {
+  const marcas = FLOW.map((f, idx) => f.t === "ex"
+    ? `<b class="mk ${idx < paso ? "hecho" : ""}" style="left:${((idx + 0.5) / FLOW.length) * 100}%" title="Mini desafío"></b>`
+    : "").join("");
+  return `<div class="prog" role="progressbar" aria-valuemin="0" aria-valuemax="${FLOW.length}" aria-valuenow="${paso}"><i style="width:${(paso / FLOW.length) * 100}%"></i>${marcas}</div>`;
+}
+
 /* ===== 1) Inicio de sesión ===== */
 function login() {
   user = null;
   st.hidden = true;
   who.hidden = true;
+  mascota("login", "¡Hola! Soy tu guía. Poné tu nombre y arrancamos.");
   box.innerHTML = `
-    <div class="login">
+    <div class="login paso">
       <h2>Iniciá sesión</h2>
       <p class="sub">Ingresá tus datos para empezar el test.</p>
       <form id="lf" novalidate>
@@ -592,16 +857,25 @@ document.getElementById("logout").onclick = login;
 
 function reiniciar() {
   sc.p = sc.e = sc.a = 0;
-  i = 0; ejI = 0; ejRes = [];
+  paso = 0; ejRes = [];
   home();
 }
 
-/* ===== 2) Inicio del test ===== */
+/* ===== 2) Pantalla de inicio ===== */
 function home() {
   st.hidden = true;
+  const nombre = esc(user.nombre.split(" ")[0]);
+  mascota("home", "Acá no hay respuestas malas. Elegí lo que más se parezca a vos.");
   box.innerHTML = `
-    <div class="home">
-      <p>Hola, <b>${esc(user.nombre.split(" ")[0])}</b>. Estás transitando 3er año y en 4to vas a elegir tu orientación técnica. El test tiene dos partes: <b>20 preguntas vocacionales</b> y <b>6 ejercicios prácticos</b> donde se evalúa cómo resolvés los problemas. Al final descubrís qué se alinea mejor con vos: Programación, Electrónica o Automotor.</p>
+    <div class="home paso">
+      <h2>¡Hola, ${nombre}!</h2>
+      <p>Estás en 3er año y en 4to vas a elegir tu orientación técnica. Este test te ayuda a descubrir cuál se parece más a vos: <b>Programación</b>, <b>Electrónica</b> o <b>Automotor</b>.</p>
+      <div class="datos">
+        <div class="dato"><b>${N}</b><span>preguntas</span></div>
+        <div class="dato"><b>${EX.length}</b><span>mini desafíos</span></div>
+        <div class="dato"><b>~10</b><span>minutos</span></div>
+      </div>
+      <p class="muted">Los mini desafíos van apareciendo en el medio de las preguntas. Son cortitos y tenés una pista si te trabás.</p>
       <button class="btn big" id="go">Iniciar test orientativo</button>
       <div class="slots">
         <div class="contenedor img-inicio-1"></div>
@@ -610,59 +884,61 @@ function home() {
       </div>
     </div>
   `;
-  document.getElementById("go").onclick = () => { show(); };
+  document.getElementById("go").onclick = avanzar;
 }
 
-/* ===== 3) Preguntas vocacionales ===== */
-function show() {
-  if (i >= N) return ejIntro();
-  const [q, o] = Q[i];
+/* ===== 3) Recorrido mezclado ===== */
+function avanzar() {
+  if (paso >= FLOW.length) return end();
+  const f = FLOW[paso];
+  if (f.t === "q") showQ(f.k); else showEx(f.k);
+}
+
+function showQ(k) {
+  const [q, o] = Q[k];
   const ks = Object.keys(o).sort(() => Math.random() - .5);
+  const dice = k === Math.floor(N / 2) ? "¡Ya pasaste la mitad de las preguntas!" :
+               k === N - 1 ? "¡Última pregunta!" : DICE_Q[k % DICE_Q.length];
+  mascota("q", dice);
   box.innerHTML = `
-    <div class="count">Parte 1 · Pregunta ${i + 1} de ${N}</div>
-    <div class="prog"><i style="width:${(i / N) * 100}%"></i></div>
-    <p class="q">${q}</p>
+    <div class="paso">
+      <div class="count">Pregunta ${k + 1} de ${N}</div>
+      ${prog()}
+      <p class="q">${esc(q)}</p>
+      <div id="ops"></div>
+    </div>
   `;
-  ks.forEach(k => {
+  const ops = document.getElementById("ops");
+  ks.forEach((key, n) => {
     const b = document.createElement("button");
     b.className = "opt";
-    b.textContent = o[k];
+    b.innerHTML = `<span class="ltr">${"ABC"[n]}</span><span>${esc(o[key])}</span>`;
     b.onclick = () => {
-      sc[k]++;
-      i++;
-      show();
+      sc[key]++;
+      paso++;
+      avanzar();
     };
-    box.appendChild(b);
+    ops.appendChild(b);
   });
 }
 
-/* ===== 4) Ejercicios prácticos ===== */
-function ejIntro() {
-  box.innerHTML = `
-    <div class="home">
-      <div class="prog"><i style="width:100%"></i></div>
-      <p class="q">Parte 2 · Ejercicios prácticos</p>
-      <p>Terminaste las preguntas. Ahora vienen ${EX.length} ejercicios cortos, dos de cada especialidad. Se evalúa si acertás, en cuántos intentos y cuánto tardás. Si te equivocás, tenés una pista y un segundo intento.</p>
-      <button class="btn big" id="goex">Empezar ejercicios</button>
-    </div>
-  `;
-  document.getElementById("goex").onclick = showEx;
-}
-
-function showEx() {
-  if (ejI >= EX.length) return end();
-  const e = EX[ejI], s = SP[e.esp], t0 = Date.now();
+/* ===== 4) Mini desafíos ===== */
+function showEx(k) {
+  const e = EX[k], t0 = Date.now();
   let intentos = 0, hecho = false;
 
+  mascota("ex", "¡Mini desafío! Es más fácil de lo que parece.");
   box.innerHTML = `
-    <div class="count">Parte 2 · Ejercicio ${ejI + 1} de ${EX.length}</div>
-    <div class="prog"><i style="width:${(ejI / EX.length) * 100}%"></i></div>
-    <span class="tag" style="background:${s.c}">${s.em} ${esc(e.t)}</span>
-    <p class="q">${esc(e.q)}</p>
-    ${e.codigo ? `<pre class="code">${esc(e.codigo)}</pre>` : ""}
-    <div id="exb"></div>
-    <div class="fb" id="fb" aria-live="polite"></div>
-    <div class="acts" id="exn"></div>
+    <div class="paso">
+      <div class="count">Mini desafío ${k + 1} de ${EX.length}</div>
+      ${prog()}
+      <span class="tag neutro">⭐ ${esc(e.t)}</span>
+      <p class="q">${esc(e.q)}</p>
+      ${e.tipo === "orden" ? '<p class="muted">Tocá los pasos en el orden correcto.</p>' : ""}
+      <div id="exb"></div>
+      <div class="fb" id="fb" aria-live="polite"></div>
+      <div class="acts" id="exn"></div>
+    </div>
   `;
   const exb = document.getElementById("exb");
   const fb = document.getElementById("fb");
@@ -672,32 +948,33 @@ function showEx() {
     if (hecho) return;
     hecho = true;
     ejRes.push({ id: e.id, esp: e.esp, t: e.t, pts, intentos, seg: Math.max(1, Math.round((Date.now() - t0) / 1000)), detalle });
+    decir(pts >= 1 ? "¡Bien ahí! 🎉" : pts > 0 ? "¡Casi! Pero lo lograste." : "No pasa nada, seguimos.");
     const b = document.createElement("button");
     b.className = "btn";
-    b.textContent = ejI + 1 >= EX.length ? "Ver mi resultado" : "Siguiente ejercicio";
-    b.onclick = () => { ejI++; showEx(); };
+    b.textContent = paso + 1 >= FLOW.length ? "Ver mi resultado" : "Siguiente";
+    b.onclick = () => { paso++; avanzar(); };
     exn.appendChild(b);
     b.focus();
   };
 
   if (e.tipo === "orden") {
     const n = e.pasos.length;
-    const pool = e.pasos.map((_, k) => k).sort(() => Math.random() - .5);
+    const pool = e.pasos.map((_, i) => i).sort(() => Math.random() - .5);
     let sel = [];
     const comprobar = () => {
       intentos = 1;
-      const ok = sel.filter((k, p) => k === p).length;
-      exb.innerHTML = `<ol class="mine">${sel.map((k, p) => `<li class="${k === p ? "good" : "badp"}">${esc(e.pasos[k])} ${k === p ? "✓" : "✗"}</li>`).join("")}</ol>`;
+      const ok = sel.filter((x, p) => x === p).length;
+      exb.innerHTML = `<ol class="mine">${sel.map((x, p) => `<li class="${x === p ? "good" : "badp"}">${esc(e.pasos[x])} ${x === p ? "✓" : "✗"}</li>`).join("")}</ol>`;
       msg(`Acertaste ${ok} de ${n} pasos en su lugar.` + (ok < n ? `<br>Orden correcto:<ol>${e.pasos.map(x => `<li>${esc(x)}</li>`).join("")}</ol>` : " ¡Excelente!"), ok === n ? "ok" : ok >= n / 2 ? "mid" : "bad");
       fin(ok / n, `${ok}/${n} pasos en su lugar`);
     };
     const draw = () => {
-      const libres = pool.filter(k => !sel.includes(k));
+      const libres = pool.filter(x => !sel.includes(x));
       exb.innerHTML = `
         <div class="lab2">Pasos disponibles</div>
-        <div class="pool">${libres.map(k => `<button type="button" class="step" data-k="${k}">${esc(e.pasos[k])}</button>`).join("") || '<span class="muted">Ya usaste todos los pasos.</span>'}</div>
+        <div class="pool">${libres.map(x => `<button type="button" class="step" data-k="${x}">${esc(e.pasos[x])}</button>`).join("") || '<span class="muted">Ya usaste todos los pasos.</span>'}</div>
         <div class="lab2">Tu orden</div>
-        <ol class="mine">${sel.length ? sel.map(k => `<li>${esc(e.pasos[k])}</li>`).join("") : '<li class="empty">Tocá los pasos en el orden correcto…</li>'}</ol>
+        <ol class="mine">${sel.length ? sel.map(x => `<li>${esc(e.pasos[x])}</li>`).join("") : '<li class="empty">Tocá los pasos en el orden correcto…</li>'}</ol>
         <div class="acts">
           <button type="button" class="btn ghost" id="und" ${sel.length ? "" : "disabled"}>Deshacer</button>
           <button type="button" class="btn" id="chk" ${sel.length === n ? "" : "disabled"}>Comprobar</button>
@@ -727,6 +1004,7 @@ function showEx() {
         fin(intentos === 1 ? 1 : .5, `respuesta ${v}`);
       } else if (intentos === 1) {
         msg(`Todavía no. Pista: ${esc(e.pista)} Probá de nuevo.`, "bad");
+        decir("Mirá la pista y probá otra vez 💪");
         ans.select();
       } else {
         ans.disabled = chk.disabled = true;
@@ -736,29 +1014,31 @@ function showEx() {
     };
     chk.onclick = go;
     ans.addEventListener("keydown", ev => { if (ev.key === "Enter") go(); });
+    ans.focus();
 
   } else { /* elegir */
-    exb.innerHTML = e.op.map((t, k) => `<button type="button" class="opt" data-k="${k}">${esc(t)}</button>`).join("");
+    exb.innerHTML = e.op.map((t, i) => `<button type="button" class="opt" data-k="${i}"><span class="ltr">${"ABCD"[i]}</span><span>${esc(t)}</span></button>`).join("");
     const btns = [...exb.querySelectorAll(".opt")];
     btns.forEach(b => b.onclick = () => {
       if (hecho) return;
-      const k = +b.dataset.k;
+      const i = +b.dataset.k;
       intentos++;
-      if (k === e.ok) {
+      if (i === e.ok) {
         btns.forEach(x => x.disabled = true);
         b.classList.add("right");
         msg(intentos === 1 ? "¡Correcto, a la primera!" : "¡Correcto! Lo lograste en el segundo intento.", "ok");
-        fin(intentos === 1 ? 1 : .5, e.op[k]);
+        fin(intentos === 1 ? 1 : .5, e.op[i]);
       } else if (intentos === 1) {
         b.disabled = true;
         b.classList.add("wrong");
         msg(`No es esa. Pista: ${esc(e.pista)} Probá con otra.`, "bad");
+        decir("Mirá la pista y probá otra vez 💪");
       } else {
         btns.forEach(x => x.disabled = true);
         b.classList.add("wrong");
         btns[e.ok].classList.add("right");
         msg(`No era esa. La correcta es ${esc(e.op[e.ok])}. ${esc(e.pista)}`, "bad");
-        fin(0, e.op[k]);
+        fin(0, e.op[i]);
       }
     });
   }
@@ -769,8 +1049,11 @@ function end() {
   const R = calcular();
   const w = ganador(R);
   const s = SP[w];
+  const nombre = esc(user.nombre.split(" ")[0]);
   bars(R);
   st.hidden = false;
+  mascota("fin", `¡Listo, ${user.nombre.split(" ")[0]}! Mirá qué especialidad te salió.`);
+  window.scrollTo({ top: 0 });
   const li = a => a.map(x => `<li>${x}</li>`).join("");
   const exHTML = ejRes.map(r => {
     const ic = r.pts >= 1 ? "✅" : r.pts > 0 ? "🟡" : "❌";
@@ -778,17 +1061,17 @@ function end() {
   }).join("");
 
   box.innerHTML = `
-    <div class="res">
+    <div class="res paso">
       <div class="hero" style="background:${s.g}">
         <div class="em">${s.em}</div>
         <h2>${s.n}</h2>
         <p>${s.lema}</p>
       </div>
-      <span class="tag" style="background:${s.c}">Especialidad sugerida para ${esc(user.nombre.split(" ")[0])}</span>
+      <span class="tag" style="background:${s.c}">Especialidad sugerida para ${nombre}</span>
       <p>${s.d}</p>
       <h3>Qué vas a aprender</h3><ul>${li(s.ap)}</ul>
       <h3>Salidas laborales</h3><ul>${li(s.sal)}</ul>
-      <h3>Cómo resolviste los ejercicios</h3><ul class="ejlist">${exHTML}</ul>
+      <h3>Cómo resolviste los mini desafíos</h3><ul class="ejlist">${exHTML}</ul>
       <div class="pics">
         <div class="contenedor img-${w}-1"></div>
         <div class="contenedor img-${w}-2"></div>
@@ -796,10 +1079,12 @@ function end() {
       ${s.frase ? `<blockquote class="frase" style="border-color:${s.c}">“${s.frase[0]}”<cite>—${s.frase[1]}</cite></blockquote>` : ""}
       <p class="sub">Revisá las barras estadísticas de abajo para analizar tus afinidades generales. Te recomendamos charlar el resultado con tus profesores y familia.</p>
       <button class="btn" id="re">Volver al inicio</button>
+      <div class="contacto">
+        <h3>CONTACTANOS :D *risita*</h3>
+        <h4><a href="mailto:julianrafaelmeza17@gmail.com">julianrafaelmeza17@gmail.com</a></h4>
+        <h5><a href="https://www.instagram.com/rafael_msanchez/">Chat con J (En mantenimiento)</a></h5>
+      </div>
     </div>
-    <h3>CONTACTANOS :D *risita*</h3>
-    <h4><a href="julianrafaelmeza17@gmail.com">julianrafaelmeza17@gmail.com</a></h4>
-    <h5><a href="https://www.instagram.com/rafael_msanchez/">Chat con J (En mantenimiento)</a></h5>
   `;
   document.getElementById("re").onclick = reiniciar;
 }
